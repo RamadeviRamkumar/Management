@@ -1,4 +1,4 @@
-module.exports = { 'url':'mongodb://127.0.0.1:/Data',
+module.exports = { 'url':'mongodb+srv://ramdevcse25:aadhini@cluster0.43timbg.mongodb.net/Data',
 };
 PORT = 7000
 // SECRET_KEY = Ramadevi

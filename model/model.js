@@ -23,7 +23,7 @@ var Schema = mongoose.Schema ({
     },
 })
 Schema.path('Empemail').validate(async () =>{
-    const emailCount = await mongoose.models.Details.countDocuments({Empemail})
+    const emailCount = await mongoose.model.Details.countDocuments({Empemail})
     return !emailCount
   },'Empemail already exists');
   

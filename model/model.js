@@ -1,4 +1,4 @@
-var mongoose = require("mongoose");
+var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema({
   Empname: {
@@ -22,9 +22,9 @@ var Schema = mongoose.Schema({
     default: Date.now,
   },
 });
-// Schema.path("Empemail").validate(async () => {
+
+// Schema.path("Empemail").validate(async (Empemail) => {
 //   const emailCount = await mongoose.models.Details.countDocuments({ Empemail });
-//   console.log(Empemail);
 //   return !emailCount;
 // }, "Empemail already exists");
 

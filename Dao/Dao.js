@@ -73,44 +73,7 @@ exports.Dao_see = async (req, res) => {
 };
 
 exports.Dao_update = async (req, res) => {
-  // try {
-  //   const { username } = req.params;
-
-  //   const Empdata = {
-  //     Empname: req.body.Empname,
-  //     // Age: req.body.Age,
-  //     // Gender: req.body.Gender,
-  //     // DOB: req.body.DOB,
-  //     Phonenumber: req.body.Phonenumber,
-  //     Empemail: req.body.Empemail,
-  //     password: enc,
-  //   };
-
-  //   if (Empdata.password) {
-  //    Empdata.password = cryptr.encrypt(Empdata.password);
-  //   }
-
-  //   const user = await service.Service_update(username, user);
-
-  //   if (!user) {
-  //     return res.json({
-  //       status: "Error",
-  //       message: "Username incorrect or update failed",
-  //     });
-  //   }
-
-  //   res.json({
-  //     status: "Success",
-  //     message: "Employee details updated successfully",
-  //     data: user,
-  //   });
-  // } catch (error) {
-  //   res.status(500).json({
-  //     status: "Error",
-  //     message: error.message,
-  //   });
-  // }
-  try {
+    try {
     const id = req.params._id;
     const user = await Signup.findByIdAndUpdate(id, req.body, { new: true });
     if (user) {
@@ -120,7 +83,7 @@ exports.Dao_update = async (req, res) => {
       });
     } else {
       res.status(404).json({
-        error: "User NOT Found",
+        error: "User Not Found",
       });
     }
   } catch (error) {

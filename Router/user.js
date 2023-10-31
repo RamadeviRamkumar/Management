@@ -83,10 +83,10 @@ router.route('/employee/:user_id').get(controller.view)
 router.route('/update/:_id').put(controller.update)
 router.route('/delete/_id').delete(controller.Delete)
 
-router.route('/getByEmail/:Empemail').get(controller.see)
+router.route('/getByEmail/:email').get(controller.see)
 // router.route('/getByEmail/:Empemail').patch(controller.update) 
 // router.route('/getByEmail/:Empemail').put(controller.update)
-router.route('/getByEmail/:Empemail').delete(controller.Delete)
+router.route('/getByEmail/:email').delete(controller.Delete)
 
 module.exports = router;
 

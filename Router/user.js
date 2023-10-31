@@ -70,9 +70,17 @@ router.post('/Register',async(req,res)=> {
        res.status(201).json({
         message : "New User Signup Successfully",
         data:{
-            Empname : req.body.Empname,
-            Empemail : req.body.Empemail,
+            Name : req.body.Name,
+            Id : req.body.Id,
+            Gender : req.body.Gender,
+            DOB : req.body.DOB,
+            DOJ : req.body.DOJ,
+            Address : req.body.Address,
+            Email : req.body.Email,
             Phonenumber : req.body.Phonenumber,
+            DepartmentNo : req.body.DepartmentNo,
+            Designation : req.body.Designation,
+            Salary : req.body.Salary,
             Password : enc,
         },
        });

@@ -9,7 +9,7 @@ router.get('/read',function(req,res){
         message:"Welcome to signin Page",
     })
 });
-const Signup = require('../model/model.js');
+// const Signup = require('../model/model.js');
 router.post("/signin", async (req, res) => {
   try {
     const { Empname, Password } = req.body;
@@ -42,55 +42,61 @@ router.post("/signin", async (req, res) => {
     });
   }
 });
-
-
-
-
 const emailcount = require ('../model/model.js');
 
-router.post('/Register',async(req,res)=> {
-    var cryptr = new Cryptr('Employee');
-    var enc = cryptr.encrypt(req.body.Password);
-    // var dec = cryptr.decrypt(enc);
+const Signup = require('../model/model.js');
+
+    router.post('/register', async (req, res) => {
+        var cryptr = new Cryptr('Employee');
+        var enc = cryptr.encrypt(req.body.Password);
+        // var dec = cryptr.decrypt(enc);
     
-    var user = new Signup();
-    user.Name = req.body.Name;
-    user.Id   = req.body.Id;
-    user.Gender = req.body.Gender;
-    user.Dateofbirth = req.body.Dateofbirth;
-    user.Dateofjoining = req.body.Dateofjoining;
+        var user = new Signup();
+        user.Empname = req.body.Empname;
+        user.Empid = req.body.Empid;
     user.Empemail = req.body.Empemail;
-    user.Phonenumber = req.body.Phonenumber;
-    user.DepartmentNo = req.body.DepartmentNo;
-    user.Designation = req.body.Designation;
+    user.EmpContactNo = req.body.EmpContactNo;
+    user.AddressLine1 = req.body.AddressLine1;
+    user.AddressLine2 = req.body.AddressLine2;
+    user.Pincode = req.body.Pincode;
+    user.City = req.body.City;
+    user.State = req.body.State;
+    user.BankName = req.body.BankName;
+    user.Ifsc = req.body.Ifsc;
+    user.AccountNo = req.body.AccountNo;
+    user.BankBranch = req.body.BankBranch;
     user.Salary = req.body.Salary;
-    user.Password =enc ;
-    try{
-       await user.save();
-       res.status(201).json({
-        message : "New User Signup Successfully",
-        data:{
-            Name : req.body.Name,
-            Id : req.body.Id,
-            Gender : req.body.Gender,
-            DOB : req.body.DOB,
-            DOJ : req.body.DOJ,
-            Address : req.body.Address,
-            Email : req.body.Email,
-            Phonenumber : req.body.Phonenumber,
-            DepartmentNo : req.body.DepartmentNo,
-            Designation : req.body.Designation,
-            Salary : req.body.Salary,
-            Password : enc,
-        },
-       });
-    } catch(err) {
-        res.status(400).json({
-            message : "User Already Signed up with this email",
-            error : err.message,
-        });
-    }
-});
+    user.Password = enc;
+    
+        try {
+            await user.save();
+            res.status(200).json({
+                message: 'New user signed up',
+                data: {
+                    Empname    : req.body.Empname,
+                    Empid        : req.body.Empid,
+                    EmpContactNo : req.body.EmpContactNo,
+                    Empemail     : req.body.Empemail,
+                    AddressLine1 : req.body.AddressLine1,
+                    AddressLine2 : req.body.AddressLine2,
+                    Pincode      : req.body.Pincode,
+                    City         : req.body.City,
+                    State        : req.body.State,
+                    BankName     : req.body.BankName,
+                    Ifsc         : req.body.Ifsc,
+                    AccountNo    : req.body.AccountNo,
+                    BankBranch   : req.body.BankBranch,
+                    Salary       : req.body.Salary,   
+                   Password : req.body.Password,
+                },
+            });
+        } catch (err) {
+            res.status(400).json({
+                message: 'User already signed up with this Email',
+                error: err.message, 
+            });
+        }
+    });
 
 var controller = require('../controller/handle.js');
 router.route('/getall').get(controller.index)

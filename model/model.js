@@ -29,7 +29,7 @@ var Schema = mongoose.Schema({
     required : true,
     type : Number,
   },
-  Empemail: {
+  Email: {
     required: true,
     type: String,
   },

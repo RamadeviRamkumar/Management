@@ -48,15 +48,22 @@ router.post("/signin", async (req, res) => {
 
 const emailcount = require ('../model/model.js');
 
-router.post('/signup',async(req,res)=> {
+router.post('/Register',async(req,res)=> {
     var cryptr = new Cryptr('Employee');
     var enc = cryptr.encrypt(req.body.Password);
     // var dec = cryptr.decrypt(enc);
     
     var user = new Signup();
-    user.Empname = req.body.Empname;
+    user.Name = req.body.Name;
+    user.Id   = req.body.Id;
+    user.Gender = req.body.Gender;
+    user.Dateofbirth = req.body.Dateofbirth;
+    user.Dateofjoining = req.body.Dateofjoining;
     user.Empemail = req.body.Empemail;
     user.Phonenumber = req.body.Phonenumber;
+    user.DepartmentNo = req.body.DepartmentNo;
+    user.Designation = req.body.Designation;
+    user.Salary = req.body.Salary;
     user.Password =enc ;
     try{
        await user.save();

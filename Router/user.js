@@ -100,20 +100,6 @@ const Signup = require('../model/model.js');
         }
     });
 
-    router.post("/authenticate", async (req, res) => {
-      const { Empname, password } = req.body;
-      const user = await Signup.findOne({ Empname });
-      if (!user) {
-        return res.status(404).json({ message: "User Not Found" });
-      }
-      const isMatch = await bcrypt.compare(password, user.password);
-    
-      if (!isMatch) {
-        return res.status(401).json({ message: "Incorrect Password" });
-      }
-      const token = generateToken(user);
-      res.json({ token });
-    });
     
   
     

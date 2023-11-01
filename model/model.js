@@ -69,6 +69,8 @@ const Schema = mongoose.Schema({
         default : "Admin",
         required : true,
       },
+      resetPasswordToken:String,
+    resetPasswordExpires:Date,
     created_at: {
         type: Date,
         default: Date.now
@@ -84,3 +86,5 @@ var Signup = module.exports = mongoose.model('Details', Schema);
 module.exports.get = function (callback, limit) {
     Signup.find(callback).limit(limit);
 };
+
+

@@ -92,35 +92,25 @@ exports.Dao_update = async (req, res) => {
     });
   }
 };
-
-exports.Dao_delete = async (req, res) => {
+exports.Dao_Delete = async (req, res) => {
   try {
-    const id = req.params._id;
-    const user = await Signup.findByIdAndDelete(id,_id);
-    if (user) {
-      res.status(200).json({
-        message: "User Details deleted Successfully",
-        data: user,
-      });
-    } else {
-      res.status(404).json({
-        error: "User Not Found",
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      error: error,
+  const id = req.params._id;
+  const user = await Signup.findByIdAndDelete(id);
+  if (user) {
+    res.status(200).json({
+      message: "User Details deleted Successfully",
+      // data: user,
+    });
+  } else {
+    res.status(404).json({
+      error: "User Not Found",
+      data : id
     });
   }
+} catch (error) {
+  res.status(500).json({
+    error: error,
+  });
+}
 };
-//   try {
-//     const _id = req.params.id;
-//     const user = await Signup.findByIdAndDelete(_id);
-//     if (!user) res.status(404).send({ message: "user NOT Found" });
-//     else res.status(200).send({ message: "Employee Data Deleted SuccessFully" });
-//   } catch (e) {
-//     res.status(500).send(e);
-//   }
-// };
-
 

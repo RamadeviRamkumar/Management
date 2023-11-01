@@ -2,9 +2,6 @@ var router = require('express').Router();
 const Cryptr = require('cryptr');
 var cryptr = new Cryptr('Employee')
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
-const generateToken = require("../utils/utils.js");
-const verifyToken = require("../middleware/middle.js");
 const swaggerJSDOC = require ('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 
@@ -101,14 +98,11 @@ const Signup = require('../model/model.js');
     });
 
     
-  
-    
-    
 var controller = require('../controller/handle.js');
 router.route('/getall').get(controller.index)
 router.route('/employee/:user_id').get(controller.view)
 router.route('/update/:_id').put(controller.update)
-router.route('/delete/_id').delete(controller.Delete)
+router.route('/delete/:_id').delete(controller.Delete)
 
 router.route('/getByEmail/:email').get(controller.see)
 router.route('/getByEmail/:Empemail').patch(controller.update) 

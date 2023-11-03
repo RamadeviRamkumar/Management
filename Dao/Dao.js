@@ -1,6 +1,9 @@
 const Cryptr = require("cryptr");
 const Signup = require("../model/model.js");
 
+
+
+
 exports.Dao_index = async function (req, res) {
   try {
     const users = await Signup.find();
@@ -92,6 +95,21 @@ exports.Dao_update = async (req, res) => {
     });
   }
 };
+
+// exports.Dao_forgotpassword = async(req,res) =>{
+//   try{
+//      const user = await Signup.findOne({Empemail:req.body.Empemail});
+//      if(user){
+
+//      }
+//      else{
+//       res.status(200).send({success:true,msg:"This email doesnot exists"});
+//      }
+//   }catch(error){
+//     res.status(400).send({success:false,msg:error.message});
+
+//   }
+// }
 exports.Dao_Delete = async (req, res) => {
   try {
   const id = req.params._id;

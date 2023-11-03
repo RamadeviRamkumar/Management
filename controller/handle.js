@@ -30,6 +30,18 @@ exports.update = function(err,user)
     if (err) console.error(err);
 }
 
+exports.updatepassword = function(err,user)
+{
+    Service.Service_updatepassword(err,user);
+    if(err) console.error(err);
+}
+
+exports.forgotpassword = function(err,user)
+{
+    Service.Service_forgotpassword(err,user);
+    if(err) console.error(err);
+}
+
 // exports.data = function(err,user)
 // {
 //     Service.Service_data(err,user);

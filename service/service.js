@@ -42,6 +42,21 @@ exports.Service_update = function(err,callback)
     if (err) return console.error(err);
     callback(user);
 }
+
+// exports.Service_updatepassword = function(err,callback)
+// {
+//     Dao.Dao_updatepassword(err,callback);
+//     if(err) return console.error(err);
+//     callback(user);
+// }
+
+// exports.Service_forgotpassword(err,callback)
+// {
+//     Dao.Dao_forgotpassword(err,callback);
+//     if(err) return console.error(err);
+//     callback(user);
+// }
+
 exports.Service_Delete = function(err,callback)
 {
     Dao.Dao_Delete(err,callback);

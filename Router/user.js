@@ -64,7 +64,7 @@ function generateOTP() {
   for(let i=0;i<6;i++){
     Otp += chars[Math.floor(Math.random()*len)];
     // user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 360000;
+    // user.resetPasswordExpires = Date.now() + 360000;
   }
   return Otp;
 }
@@ -134,25 +134,44 @@ router.post('/verify', async (req, res) => {
   }
 });
 
-// router.post('/resetPassword', async (req, res) => {
-//   const {Otp} = req.body;
-//   const { newpassword } = req.body;
-//    const user = await Signup.findOne({
-//       Otp:Otp,
-//       resetPasswordExpires: { $gt: Date.now() },
-//     });
-//     if (!user) {
-//       return res.status(400).json({ message: "Invalid token" });
-//     }
-//     // const Password = await bcrypt.hash(newpassword, 10);
-//     user.Password = Password;
-//     user.Otp = null;
-//     user.resetPasswordExpires = null;
-  
-//     await user.save();
-  
-//     res.json({ message: "Password reset Successful" });
-//   });
+router.post('/resetpassword', async (req, res) => {
+  const { Empemail, newpassword } = req.body;
+
+  try {
+    const user = await Signup.findOne({ Empemail });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    if (!newpassword) { // Check if newpassword is empty or null
+      return res.status(400).json({ // 400 is more appropriate for a bad request
+        message: "New password is empty",
+      });
+    }
+
+    // Encrypt the new password
+    const encryptedNewPassword = cryptr.encrypt(newpassword);
+
+    // Update the user's password with the encrypted new password
+    user.Password = encryptedNewPassword;
+    await user.save();
+
+    return res.status(200).json({
+      message: "Password reset successful",
+      data: user,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "An error occurred",
+      error: error.message,
+    });
+  }
+});
+    
 const Signup = require('../model/model.js');
 
     router.post('/register', async (req, res) => {

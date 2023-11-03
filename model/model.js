@@ -69,18 +69,24 @@ const Schema = mongoose.Schema({
         default : "Admin",
         required : true,
       },
-      resetPasswordToken:String,
-    resetPasswordExpires:Date,
+      Otp: {
+        required: false,
+        type: Number
+    },
+    newpassword : {
+        required : false,
+        type : String
+    },
     created_at: {
         type: Date,
         default: Date.now
     }
 });
 
-Schema.path('Empemail').validate(async function (Empemail) {
-    const emailCount = await mongoose.models.Details.countDocuments({ Empemail });
-    return !emailCount;
-}, 'Empemail already exists');
+// Schema.path('Empemail').validate(async function (Empemail) {
+//     const emailCount = await mongoose.models.Details.countDocuments({ Empemail });
+//     return !emailCount;
+// }, 'Empemail already exists');
 
 var Signup = module.exports = mongoose.model('Details', Schema);
 module.exports.get = function (callback, limit) {

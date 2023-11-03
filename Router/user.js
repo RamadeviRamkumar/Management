@@ -64,7 +64,7 @@ function generateOTP() {
   for(let i=0;i<6;i++){
     Otp += chars[Math.floor(Math.random()*len)];
     // user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 360000;
+    // user.resetPasswordExpires = Date.now() + 360000;
   }
   return Otp;
 }

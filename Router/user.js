@@ -18,17 +18,22 @@ router.get("/read", function (req, res) {
 
 router.post("/login", async (req, res) => {
   try {
-    const { Username, Password,OrgName } = req.body;
-    const users = await Signup.findOne({ Username,OrgName });
-  if (!user) {
+    const { Username, OrgName, Password } = req.body;
+    
+    // First, define the Organization variable
+    const Organization = await Signup.findOne({ OrgName });
+console.log(Organization)
+    if (!Organization) {
       return res.status(404).json({
-        message: "user not found",
+        message: "Organization not found. Staff sign-in denied.",
       });
     }
-    const Organization = await Organization.findOne({OrgName});
-    if(!Organization) {
+
+    const users = await Signup.findOne({ Username });
+
+    if (!users) {
       return res.status(404).json({
-        message : "user not found",
+        message: "User not found",
       });
     }
 
@@ -36,7 +41,7 @@ router.post("/login", async (req, res) => {
 
     if (decryptedPassword === Password) {
       return res.json({
-        message: "Signin successful",
+        message: "Sign-in successful",
         data: users,
       });
     } else {
@@ -51,6 +56,7 @@ router.post("/login", async (req, res) => {
     });
   }
 });
+
 
 const transporter = nodemailer.createTransport({
   service: "Gmail",
@@ -192,7 +198,16 @@ router.post("/register", async (req, res) => {
   user.BankBranch = req.body.BankBranch;
   user.Salary = req.body.Salary;
   user.Password = enc;
+  user.Usertype = req.body.Usertype;
   user.OrgName = req.body.OrgName;
+
+  const Organization = await Organization.findOne({ OrgName });
+
+    if (!Organization) {
+      return res.status(404).json({
+        message: "Organization not found. Staff registration denied.",
+      });
+    }
 
   try {
 
@@ -215,6 +230,7 @@ router.post("/register", async (req, res) => {
         BankBranch: req.body.BankBranch,
         Salary: req.body.Salary,
         Password: enc,
+        Usertype : req.body.Usertype,
         OrgName : req.body.OrgName,
       },
     });

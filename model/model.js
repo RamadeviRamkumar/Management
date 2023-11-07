@@ -5,25 +5,25 @@ const Schema = mongoose.Schema({
         required: true,
         type: String
     },
+    OrgName : {
+        required : true,
+        type : String
+    },
     Empid: {
         required: false,
         type: String
     },
-    Empemail: {
+    Email: {
         type: String,
         required: true,
         // unique: true
     },
-    EmpContactNo: {
+    ContactNo: {
         required: true,
         type: Number,
         length: 10
     },
-    AddressLine1: {
-        required: false,
-        type: String
-    },
-    AddressLine2: {
+    Address: {
         required: false,
         type: String
     },
@@ -83,12 +83,12 @@ const Schema = mongoose.Schema({
     }
 });
 
-// Schema.path('Empemail').validate(async function (Empemail) {
-//     const emailCount = await mongoose.models.Details.countDocuments({ Empemail });
-//     return !emailCount;
-// }, 'Empemail already exists');
+Schema.path('Email').validate(async function (Email) {
+    const emailCount = await mongoose.models.Employee.countDocuments({ Email });
+    return !emailCount;
+}, 'Email already exists');
 
-var Signup = module.exports = mongoose.model('Details', Schema);
+var Signup = module.exports = mongoose.model('Employee', Schema);
 module.exports.get = function (callback, limit) {
     Signup.find(callback).limit(limit);
 };

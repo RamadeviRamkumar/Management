@@ -16,13 +16,11 @@ router.get("/read", function (req, res) {
   });
 });
 
-router.post("/signin", async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
-    const { Empname, Password } = req.body;
-
-    const users = await Signup.findOne({ Empname });
-
-    if (!users) {
+    const { Empname, Password,OrgName } = req.body;
+    const users = await Signup.findOne({ Empname,OrgName });
+  if (!users) {
       return res.status(404).json({
         message: "user not found",
       });
@@ -95,8 +93,6 @@ router.post("/forgotpassword", async (req, res) => {
       });
     } else {
       const Otp = generateOTP();
-
-      // console.log(users.otp)
       const user = await Signup.findOneAndUpdate(
         { Empemail },
         { $set: { Otp } },
@@ -149,17 +145,11 @@ router.post("/resetpassword", async (req, res) => {
     }
 
     if (!newpassword) {
-      // Check if newpassword is empty or null
       return res.status(400).json({
-        // 400 is more appropriate for a bad request
         message: "New password is empty",
       });
     }
-
-    // Encrypt the new password
     const encryptedNewPassword = cryptr.encrypt(newpassword);
-
-    // Update the user's password with the encrypted new password
     user.Password = encryptedNewPassword;
     await user.save();
 
@@ -174,19 +164,19 @@ router.post("/resetpassword", async (req, res) => {
     });
   }
 });
-
 const Signup = require("../model/model.js");
 
 router.post("/register", async (req, res) => {
   var cryptr = new Cryptr("Employee");
   var enc = cryptr.encrypt(req.body.Password);
   var user = new Signup();
+  user.Username = req.body.Username;
   user.Empname = req.body.Empname;
   user.Empid = req.body.Empid;
-  user.Empemail = req.body.Empemail;
-  user.EmpContactNo = req.body.EmpContactNo;
-  user.AddressLine1 = req.body.AddressLine1;
-  user.AddressLine2 = req.body.AddressLine2;
+  user.Email = req.body.Email;
+  user.Designation = req.body.Designation;
+  user.ContactNo = req.body.ContactNo;
+  user.Address = req.body.Address;
   user.Pincode = req.body.Pincode;
   user.City = req.body.City;
   user.State = req.body.State;
@@ -196,18 +186,20 @@ router.post("/register", async (req, res) => {
   user.BankBranch = req.body.BankBranch;
   user.Salary = req.body.Salary;
   user.Password = enc;
+  user.OrgName = req.body.OrgName;
 
   try {
+
     await user.save();
     res.status(200).json({
       message: "New user signed up",
       data: {
         Empname: req.body.Empname,
         Empid: req.body.Empid,
-        EmpContactNo: req.body.EmpContactNo,
-        Empemail: req.body.Empemail,
-        AddressLine1: req.body.AddressLine1,
-        AddressLine2: req.body.AddressLine2,
+        ContactNo: req.body.ContactNo,
+        Email: req.body.Email,
+        Designation : req.body.Designation,
+        Address: req.body.Address,
         Pincode: req.body.Pincode,
         City: req.body.City,
         State: req.body.State,
@@ -217,6 +209,7 @@ router.post("/register", async (req, res) => {
         BankBranch: req.body.BankBranch,
         Salary: req.body.Salary,
         Password: enc,
+        OrgName : req.body.OrgName,
       },
     });
   } catch (err) {

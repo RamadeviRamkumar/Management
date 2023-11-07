@@ -39,7 +39,7 @@ const Organization = require("../model/orgmodel.js");
   });
 
   var controller = require("../controller/controller.js");
-router.route("/getall").get(controller.index);
+router.route("/org/getall").get(controller.index);
 router.route("/org/:user_id").get(controller.view);
 router.route("/update/:_id").put(controller.update);
 router.route("/delete/:_id").delete(controller.Delete);

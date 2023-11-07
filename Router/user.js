@@ -243,7 +243,7 @@ router.post("/register", async (req, res) => {
 });
 
 var controller = require("../controller/handle.js");
-router.route("/getall").get(controller.index);
+router.route("/user/getall").get(controller.index);
 router.route("/employee/:user_id").get(controller.view);
 router.route("/update/:_id").put(controller.update);
 router.route("/delete/:_id").delete(controller.Delete);

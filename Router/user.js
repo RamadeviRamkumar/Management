@@ -18,11 +18,17 @@ router.get("/read", function (req, res) {
 
 router.post("/login", async (req, res) => {
   try {
-    const { Empname, Password,OrgName } = req.body;
-    const users = await Signup.findOne({ Empname,OrgName });
-  if (!users) {
+    const { Username, Password,OrgName } = req.body;
+    const users = await Signup.findOne({ Username,OrgName });
+  if (!user) {
       return res.status(404).json({
         message: "user not found",
+      });
+    }
+    const Organization = await Organization.findOne({OrgName});
+    if(!Organization) {
+      return res.status(404).json({
+        message : "user not found",
       });
     }
 

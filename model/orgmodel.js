@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const OrganizationSchema = new mongoose.Schema({
+const OrgSchema = new mongoose.Schema({
     
     OrgName : {
         required : true,
@@ -27,7 +27,7 @@ const OrganizationSchema = new mongoose.Schema({
     },
 });
 
-const OrgDetails = mongoose.model("OrgDetails",OrganizationSchema)
+const OrgDetails = mongoose.model("OrgDetails",OrgSchema)
 
 module.exports = OrgDetails;
   

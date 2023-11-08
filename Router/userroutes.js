@@ -48,6 +48,7 @@ const Org = await Organization.findOne({ OrgName });
       });
     }
   } catch (error) {
+    console.error("An error occurred:", error);
     return res.status(500).json({
       message: "An error occurred",
       error: error.message,
@@ -175,11 +176,11 @@ router.post("/resetpassword", async (req, res) => {
   }
 });
 const Signup = require("../model/usermodel.js");
-// const Organization = require("../model/orgmodel.js")
+const Organization = require("../model/orgmodel.js")
 router.post("/register", async (req, res) => {
   var cryptr = new Cryptr("Employee");
     var enc = cryptr.encrypt(req.body.Password);
-
+    var dec = cryptr.decrypt(enc);
       var user = new Signup();
       user.Name = req.body.Name;
       user.UserName =req.body.UserName;
@@ -204,6 +205,14 @@ router.post("/register", async (req, res) => {
       user.State = req.body.State;
       user.Pincode = req.body.Pincode;
       user.Usertype = req.body.Usertype;
+
+      const Org = await Organization.findOne({ OrgName });
+      if (!Org) {
+      return res.status(404).json({
+        message: "Organization not found. Staff sign-in denied.",
+      });
+    }
+
       try {
         await user.save();
         res.status(200).json({

@@ -21,10 +21,10 @@ const Schema = mongoose.Schema({
         required: false,
         type: String
     },
-    DOB: {
+    DateOfBirth: {
         type: String,
       },
-      DOJ: {
+      DateOfJoining: {
         type: String,
       },
     Email: {

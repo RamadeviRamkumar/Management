@@ -185,8 +185,8 @@ var user = new Signup();
       user.UserName =req.body.UserName;
       user.Empid = req.body.Empid;
       user.Gender = req.body.Gender;
-      user.Dateofbirth = req.body.Dateofbirth;
-      user.Dateofjoining = req.body.Dateofjoining;
+      user.DateOfBirth = req.body.Dateofbirth;
+      user.DateOfJoining = req.body.Dateofjoining;
       user.ContactNo = req.body.ContactNo;
       user.Email = req.body.Email;
       user.Address = req.body.Address
@@ -214,8 +214,8 @@ var user = new Signup();
       UserName : req.body.UserName,
       Empid : req.body.Empid,
       Gender : req.body.Gender,
-      Dateofbirth : req.body.DateOfBirth,
-      Dateofjoining : req.body.DateOfJoining,
+      DateOfBirth : req.body.DateOfBirth,
+      DateOfJoining : req.body.DateOfJoining,
       ContactNo : req.body.ContactNo,
       Email : req.body.Email,
       Address : req.body.Address,

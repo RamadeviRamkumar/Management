@@ -177,7 +177,8 @@ router.post("/resetpassword", async (req, res) => {
 const Signup = require("../model/usermodel.js");
 const Organization = require("../model/orgmodel.js")
 router.post("/register", async (req, res) => {
-  
+  var cryptr = new Cryptr("Employee");
+    var enc = cryptr.encrypt(Password);
 var user = new Signup();
   try{
     const{
@@ -212,9 +213,8 @@ const Org = await Organization.findOne({ OrgName });
         message: "Organization not found. Staff registration denied.",
       });
     }
-    var encryptedPassword = cryptr.encrypt(Password);
   const user = new Signup({
-      password: encryptedPassword,
+      password: enc,
       Name,
       UserName,
       Empid,

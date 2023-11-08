@@ -220,7 +220,7 @@ var user = new Signup();
       Email : req.body.Email,
       Address : req.body.Address,
       Designation : req.body.Designation,
-      orgname : req.body.OrgName,
+      OrgName : req.body.OrgName,
       BankName : req.body.BankName,
       Branch : req.body.Branch,
       Ifsc : req.body.Ifsc,

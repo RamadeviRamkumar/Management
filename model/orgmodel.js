@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema({
+const OrganizationSchema = new mongoose.Schema({
     
     OrgName : {
         required : true,
@@ -27,13 +27,8 @@ const Schema = mongoose.Schema({
     },
 });
 
-    Schema.path('Email').validate(async function (Email) {
-        const emailCount = await mongoose.models.Orgdetails.countDocuments({ Email });
-        return !emailCount;
-    }, 'Email already exists');
-    
-    var Organization = module.exports = mongoose.model('Orgdetails', Schema);
-    module.exports.get = function (callback, limit) {
-        Organization.find(callback).limit(limit);
-    };
+const OrgDetails = mongoose.model("OrgDetails",OrganizationSchema)
+
+module.exports = OrgDetails;
+  
     

@@ -1,6 +1,4 @@
-const { Dao_view } = require('../Dao/Dao.js');
-
-Dao = require('../Dao/Dao.js');
+Dao = require('../Dao/userDao.js');
 
 exports.Service_index = function(err,callback)
 {
@@ -29,33 +27,12 @@ exports.Service_see = function(err, callback){
     callback(user);
 }
 
-// exports.Service_data = function(err,callback)
-// {
-//     Dao.Dao_data(err,callback);
-//     if (err) return console.error(err);
-//     callback(user);
-// }
-
 exports.Service_update = function(err,callback)
 {
     Dao.Dao_update(err,callback);
     if (err) return console.error(err);
     callback(user);
 }
-
-// exports.Service_updatepassword = function(err,callback)
-// {
-//     Dao.Dao_updatepassword(err,callback);
-//     if(err) return console.error(err);
-//     callback(user);
-// }
-
-// exports.Service_forgotpassword(err,callback)
-// {
-//     Dao.Dao_forgotpassword(err,callback);
-//     if(err) return console.error(err);
-//     callback(user);
-// }
 
 exports.Service_Delete = function(err,callback)
 {

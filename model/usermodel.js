@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema({
+const EmployeeSchema = new mongoose.Schema({
     Username : {
         required : true,
         type : String
     },
-    Empname: {
+    Name: {
         required: true,
         type: String
     },
@@ -13,18 +13,30 @@ const Schema = mongoose.Schema({
         required : true,
         type : String
     },
+    Designation : {
+        required : true,
+        type : String
+    },
     Empid: {
         required: false,
         type: String
     },
+    DOB: {
+        type: String,
+      },
+      Dateofjoining: {
+        type: Date,
+      },
     Email: {
         type: String,
         required: true,
-        // unique: true
+        unique: true,
+        sparse: true,
     },
     ContactNo: {
         required: true,
         type: Number,
+        unique: true,
         length: 10
     },
     Address: {
@@ -59,7 +71,7 @@ const Schema = mongoose.Schema({
         required: true,
         type: Number
     },
-    BankBranch :{
+    Branch :{
         required : true,
         type : String
     },
@@ -67,10 +79,18 @@ const Schema = mongoose.Schema({
         required:false,
         type : String
     },
+    PaymentMethod : {
+        required : true,
+        type : String
+    },
+    Status : {
+        required : true,
+        type : String
+    },
     Usertype : {
         type : String,
         enum :["Admin","Employee"],
-        default : "Admin",
+        default : "Employee",
         required : true,
       },
       Otp: {
@@ -87,14 +107,6 @@ const Schema = mongoose.Schema({
     }
 });
 
-Schema.path('Email').validate(async function (Email) {
-    const emailCount = await mongoose.models.Employee.countDocuments({ Email });
-    return !emailCount;
-}, 'Email already exists');
+const EmployeeDetails = mongoose.model("EmployeeDetails",EmployeeSchema)
 
-var Signup = module.exports = mongoose.model('Employee', Schema);
-module.exports.get = function (callback, limit) {
-    Signup.find(callback).limit(limit);
-};
-
-
+module.exports = EmployeeDetails;

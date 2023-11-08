@@ -1,8 +1,5 @@
 const Cryptr = require("cryptr");
-const Signup = require("../model/model.js");
-
-
-
+const Signup = require("../model/usermodel.js");
 
 exports.Dao_index = async function (req, res) {
   try {
@@ -53,7 +50,6 @@ exports.Dao_view = async (req, res) => {
 exports.Dao_see = async (req, res) => {
   try {
     const user = await Signup.findOne({ Empemail: req.params.Empemail });
-    // console.log(Empemail);
     console.log(user);
     if (!user) {
       return res.json({
@@ -96,20 +92,6 @@ exports.Dao_update = async (req, res) => {
   }
 };
 
-// exports.Dao_forgotpassword = async(req,res) =>{
-//   try{
-//      const user = await Signup.findOne({Empemail:req.body.Empemail});
-//      if(user){
-
-//      }
-//      else{
-//       res.status(200).send({success:true,msg:"This email doesnot exists"});
-//      }
-//   }catch(error){
-//     res.status(400).send({success:false,msg:error.message});
-
-//   }
-// }
 exports.Dao_Delete = async (req, res) => {
   try {
   const id = req.params._id;
@@ -133,14 +115,6 @@ exports.Dao_Delete = async (req, res) => {
 };
 
 
-//   try {
-//     const _id = req.params.id;
-//     const user = await Signup.findByIdAndDelete(_id);
-//     if (!user) res.status(404).send({ message: "user NOT Found" });
-//     else res.status(200).send({ message: "Employee Data Deleted SuccessFully" });
-//   } catch (e) {
-//     res.status(500).send(e);
-//   }
-// };
+
 
 

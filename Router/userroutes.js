@@ -20,10 +20,8 @@ router.post("/login", async (req, res) => {
   try {
     const { Username, OrgName, Password } = req.body;
     
-    // First, define the Organization variable
-    const Organization = await Signup.findOne({ OrgName });
-console.log(Organization)
-    if (!Organization) {
+const Organization = await Signup.findOne({ OrgName });
+      if (!Organization) {
       return res.status(404).json({
         message: "Organization not found. Staff sign-in denied.",
       });
@@ -176,80 +174,91 @@ router.post("/resetpassword", async (req, res) => {
     });
   }
 });
-const Signup = require("../model/model.js");
+const Signup = require("../model/usermodel.js");
 
 router.post("/register", async (req, res) => {
   var cryptr = new Cryptr("Employee");
-  var enc = cryptr.encrypt(req.body.Password);
-  var user = new Signup();
-  user.Username = req.body.Username;
-  user.Empname = req.body.Empname;
-  user.Empid = req.body.Empid;
-  user.Email = req.body.Email;
-  user.Designation = req.body.Designation;
-  user.ContactNo = req.body.ContactNo;
-  user.Address = req.body.Address;
-  user.Pincode = req.body.Pincode;
-  user.City = req.body.City;
-  user.State = req.body.State;
-  user.BankName = req.body.BankName;
-  user.Ifsc = req.body.Ifsc;
-  user.AccountNo = req.body.AccountNo;
-  user.BankBranch = req.body.BankBranch;
-  user.Salary = req.body.Salary;
-  user.Password = enc;
-  user.Usertype = req.body.Usertype;
-  user.OrgName = req.body.OrgName;
-
-  const Organization = await Organization.findOne({ OrgName });
-
-    if (!Organization) {
+ var user = new Signup();
+  try{
+    const{
+      Name,
+      UserName,
+      Empid,
+      Gender,
+      DOB,
+      DOJ,
+      ContactNo,
+      Address,
+      Designation,
+      OrgName,
+      BankName,
+      Branch,
+      Ifsc,
+      AccountNo,
+      Salary,
+      PaymentMethod,
+      Status,
+    } = req.body;
+  
+const Organization = await Organization.findOne({ OrgName });
+      if (!Organization) {
       return res.status(404).json({
         message: "Organization not found. Staff registration denied.",
       });
     }
-
-  try {
+    if (
+      typeof ContactNo !== "string" ||
+      ContactNo.length !== 10 ||
+      isNaN(Number(ContactNo))
+    ) {
+      return res.status(400).json({
+        message: "Contact should be a 10-digit number",
+      });
+    }
+    const encryptedPassword = cryptr.encrypt(Password);
+    const user = new Signup({
+      password: encryptedPassword,
+      Name,
+      UserName,
+      Empid,
+      Gender,
+      DOB,
+      DOJ,
+      ContactNo,
+      Address,
+      Designation,
+      OrgName,
+      BankName,
+      Branch,
+      Ifsc,
+      AccountNo,
+      Salary,
+      PaymentMethod,
+      Status,
+    });
 
     await user.save();
-    res.status(200).json({
-      message: "New user signed up",
-      data: {
-        Empname: req.body.Empname,
-        Empid: req.body.Empid,
-        ContactNo: req.body.ContactNo,
-        Email: req.body.Email,
-        Designation : req.body.Designation,
-        Address: req.body.Address,
-        Pincode: req.body.Pincode,
-        City: req.body.City,
-        State: req.body.State,
-        BankName: req.body.BankName,
-        Ifsc: req.body.Ifsc,
-        AccountNo: req.body.AccountNo,
-        BankBranch: req.body.BankBranch,
-        Salary: req.body.Salary,
-        Password: enc,
-        Usertype : req.body.Usertype,
-        OrgName : req.body.OrgName,
-      },
+
+    return res.json({
+      message: "Registered successfully",
+      data: user,
     });
-  } catch (err) {
-    res.status(400).json({
-      message: "User already signed up with this Email",
-      error: err.message,
+  } catch (error) {
+    return res.status(500).json({
+      message: "An error occurred",
+      error: error.message,
     });
   }
 });
+        
+var usercontroller = require("../controller/usercontroller.js");
+router.route("/employee/getall").get(usercontroller.index);
+router.route("/employee/:user_id").get(usercontroller.view);
+router.route("/update/:_id").put(usercontroller.update);
+router.route("/delete/:_id").delete(usercontroller.Delete);
 
-var controller = require("../controller/handle.js");
-router.route("/user/getall").get(controller.index);
-router.route("/employee/:user_id").get(controller.view);
-router.route("/update/:_id").put(controller.update);
-router.route("/delete/:_id").delete(controller.Delete);
-
-router.route("/getByEmail/:email").get(controller.see);
-router.route("/getByEmail/:Empemail").patch(controller.update);
+router.route("/getByEmail/:email").get(usercontroller.see);
+router.route("/getByEmail/:Empemail").patch(usercontroller.update);
 // router.route('/getByEmail/:Empemail').put(controller.upgrade)
 // router.route('/getByEmail/:email').delete(controller.Delete)
 

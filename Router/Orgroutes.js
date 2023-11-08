@@ -14,10 +14,8 @@ const Organization = require("../model/orgmodel.js");
     user.Email = req.body.Email;
     user.ContactNo = req.body.ContactNo;
     user.Address = req.body.Address;
-    user.Password = enc;
-  
-    try {
-  
+    user.Password = req.body.password;
+  try {
       await user.save();
       res.status(200).json({
         message: "New Company Added",
@@ -38,14 +36,14 @@ const Organization = require("../model/orgmodel.js");
     }
   });
 
-  var controller = require("../controller/controller.js");
-router.route("/org/getall").get(controller.index);
-router.route("/org/:user_id").get(controller.view);
-router.route("/update/:_id").put(controller.update);
-router.route("/delete/:_id").delete(controller.Delete);
+  var orgcontroller = require("../controller/orgcontroller.js");
+router.route("/org/getall").get(orgcontroller.index);
+router.route("org/:user_id").get(orgcontroller.view);
+router.route("/org/update/:_id").put(orgcontroller.update);
+router.route("/org/delete/:_id").delete(orgcontroller.Delete);
 
-router.route("/getByEmail/:email").get(controller.see);
-router.route("/getByEmail/:Empemail").patch(controller.update);
+router.route("/getByEmail/:email").get(orgcontroller.see);
+router.route("/getByEmail/:Empemail").patch(orgcontroller.update);
 
 
 module.exports = router;

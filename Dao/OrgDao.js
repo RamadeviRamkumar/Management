@@ -9,13 +9,13 @@ exports.Dao_index = async function (req, res) {
     if (users) {
       res.json({
         status: "Success",
-        message: "Got all user details Successfully",
+        message: "Got all Organization details Successfully",
         data: users,
       });
     } else {
       res.json({
         status: "Error",
-        message: "No users found",
+        message: "No Organization found",
       });
     }
   } catch (err) {

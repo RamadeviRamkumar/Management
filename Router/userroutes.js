@@ -180,81 +180,68 @@ router.post("/register", async (req, res) => {
   var cryptr = new Cryptr("Employee");
     var enc = cryptr.encrypt(Password);
 var user = new Signup();
-  try{
-    const{
-      Name,
-      UserName,
-      Empid,
-      Gender,
-      DOB,
-      DOJ,
-      ContactNo,
-      Email,
-      Address,
-      Designation,
-      OrgName,
-      BankName,
-      Branch,
-      Ifsc,
-      AccountNo,
-      Salary,
-      PaymentMethod,
-      Status,
-      Password,
-      City,
-      State,
-      Pincode,
-      Usertype,
-    } = req.body;
   
-const Org = await Organization.findOne({ OrgName });
-      if (!Org) {
-      return res.status(404).json({
-        message: "Organization not found. Staff registration denied.",
-      });
-    }
-  const user = new Signup({
+      user.Name = req.body.Name;
+      user.UserName =req.body.UserName;
+      user.Empid = req.body.Empid;
+      user.Gender = req.body.Gender;
+      user.Dateofbirth = req.body.Dateofbirth;
+      user.Dateofjoining = req.body.Dateofjoining;
+      user.ContactNo = req.body.ContactNo;
+      user.Email = req.body.Email;
+      user.Address = req.body.Address
+      user.Designation = req.body.Designation;
+      user.OrgName = req.body.OrgName;
+      user.BankName =req.body.BankName;
+      user.Branch = req.body.Branch;
+      user.Ifsc = req.body.Ifsc;
+      user.AccountNo = req.body.AccountNo;
+      user.Salary = req.body.Salary;
+      user.PaymentMethod = req.body.PaymentMethod;
+      user.Status = req.body.Status;
+      Password = req.body.Password;
+      user.City = req.body.City;
+      user.State = req.body.State;
+      user.Pincode = req.body.Pincode;
+      user.Usertype = req.body.Usertype;
+      try {
+        await user.save();
+        res.status(200).json({
+      Message : "Registration Successful",
+      data : {
       password: enc,
-      Name,
-      UserName,
-      Empid,
-      Gender,
-      DOB,
-      DOJ,
-      ContactNo,
-      Email,
-      Address,
-      Designation,
-      OrgName,
-      BankName,
-      Branch,
-      Ifsc,
-      AccountNo,
-      Salary,
-      PaymentMethod,
-      Status,
-      City,
-      State,
-      Pincode,
-      Usertype,
+      Name : req.body.Name,
+      UserName : req.body.UserName,
+      Empid : req.body.Empid,
+      Gender : req.body.Gender,
+      Dateofbirth : req.body.DateOfBirth,
+      Dateofjoining : req.body.DateOfJoining,
+      ContactNo : req.body.ContactNo,
+      Email : req.body.Email,
+      Address : req.body.Address,
+      Designation : req.body.Designation,
+      orgname : req.body.OrgName,
+      BankName : req.body.BankName,
+      Branch : req.body.Branch,
+      Ifsc : req.body.Ifsc,
+      AccountNo : req.body.AccountNo,
+      Salary : req.body.Salary,
+      PaymentMethod : req.body.PaymentMethod,
+      Status : req.body.Status,
+      City : req.body.City,
+      State : req.body.State,
+      Pincode : req.body.Pincode,
+      Usertype : req.body.Usertype,
+        },
     });
-
-    await user.save();
-
-    return res.json({
-      message: "Registered successfully",
-      data: user,
-      // password : encryptedPassword
-    });
-  } catch (error) {
+} catch (error) {
     console.log(error)
     return res.status(500).json({
       message: "An error occurred",
       error: error.message,
     });
   }
-});
-        
+});      
 var usercontroller = require("../controller/usercontroller.js");
 router.route("/employee/getall").get(usercontroller.index);
 router.route("/employee/:user_id").get(usercontroller.view);

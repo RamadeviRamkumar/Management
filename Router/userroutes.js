@@ -18,7 +18,7 @@ router.get("/read", function (req, res) {
 
 router.post("/login", async (req, res) => {
   try {
-    const { Username, OrgName, Password } = req.body;
+    const { UserName, OrgName, Password } = req.body;
     
 const Organization = await Signup.findOne({ OrgName });
       if (!Organization) {
@@ -27,9 +27,9 @@ const Organization = await Signup.findOne({ OrgName });
       });
     }
 
-    const users = await Signup.findOne({ Username });
+    const user = await Signup.findOne({ UserName });
 
-    if (!users) {
+    if (!user) {
       return res.status(404).json({
         message: "User not found",
       });
@@ -40,7 +40,7 @@ const Organization = await Signup.findOne({ OrgName });
     if (decryptedPassword === Password) {
       return res.json({
         message: "Sign-in successful",
-        data: users,
+        data: user,
       });
     } else {
       return res.status(401).json({
@@ -175,7 +175,7 @@ router.post("/resetpassword", async (req, res) => {
   }
 });
 const Signup = require("../model/usermodel.js");
-
+const Organization = require("../model/orgmodel.js")
 router.post("/register", async (req, res) => {
   var cryptr = new Cryptr("Employee");
  var user = new Signup();
@@ -188,6 +188,7 @@ router.post("/register", async (req, res) => {
       DOB,
       DOJ,
       ContactNo,
+      Email,
       Address,
       Designation,
       OrgName,
@@ -198,23 +199,29 @@ router.post("/register", async (req, res) => {
       Salary,
       PaymentMethod,
       Status,
+      Password,
+      City,
+      State,
+      Pincode,
     } = req.body;
   
-const Organization = await Organization.findOne({ OrgName });
-      if (!Organization) {
+
+   
+const Orga = await Organization.findOne({ OrgName });
+      if (!Orga) {
       return res.status(404).json({
         message: "Organization not found. Staff registration denied.",
       });
     }
-    if (
-      typeof ContactNo !== "string" ||
-      ContactNo.length !== 10 ||
-      isNaN(Number(ContactNo))
-    ) {
-      return res.status(400).json({
-        message: "Contact should be a 10-digit number",
-      });
-    }
+    // if (
+    //   typeof ContactNo !== String ||
+    //   ContactNo.length !== 10 ||
+    //   isNaN(Number(ContactNo))
+    // ) {
+    //   return res.status(400).json({
+    //     message: "Contact should be a 10-digit number",
+    //   });
+    // }
     const encryptedPassword = cryptr.encrypt(Password);
     const user = new Signup({
       password: encryptedPassword,
@@ -225,6 +232,7 @@ const Organization = await Organization.findOne({ OrgName });
       DOB,
       DOJ,
       ContactNo,
+      Email,
       Address,
       Designation,
       OrgName,
@@ -235,6 +243,9 @@ const Organization = await Organization.findOne({ OrgName });
       Salary,
       PaymentMethod,
       Status,
+      City,
+      State,
+      Pincode,
     });
 
     await user.save();

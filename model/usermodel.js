@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const EmployeeSchema = new mongoose.Schema({
-    Username : {
+const Schema = mongoose.Schema({
+    UserName : {
         required : true,
         type : String
     },
@@ -24,7 +24,7 @@ const EmployeeSchema = new mongoose.Schema({
     DOB: {
         type: String,
       },
-      Dateofjoining: {
+      DOJ: {
         type: String,
       },
     Email: {
@@ -43,18 +43,18 @@ const EmployeeSchema = new mongoose.Schema({
         required: false,
         type: String
     },
-    // Pincode: {
-    //     required: true,
-    //     type: Number
-    // },
-    // City: {
-    //     required: true,
-    //     type: String
-    // },
-    // State: {
-    //     required: true,
-    //     type: String
-    // },
+    Pincode: {
+        required: true,
+        type: Number
+    },
+    City: {
+        required: true,
+        type: String
+    },
+    State: {
+        required: true,
+        type: String
+    },
     BankName: {
         required: true,
         type: String
@@ -107,6 +107,9 @@ const EmployeeSchema = new mongoose.Schema({
     }
 });
 
-const EmployeeDetails = mongoose.model("EmployeeDetails",EmployeeSchema)
+var Signup = (module.exports = mongoose.model("Employees", Schema));
+module.exports.get = function (callback, limit) {
+  Signup.find(callback).limit(limit);
+};
 
-module.exports = EmployeeDetails;
+

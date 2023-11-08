@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 
 const apiRoutes = require("./Router/userroutes.js");
-const Routes = require("./Router/Orgroutes.js");
+const OrgRoutes = require("./Router/Orgroutes.js");
 const mongodb = require("./mongo/DB.js");
 
 app.use(cors());
@@ -29,6 +29,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/user', apiRoutes);
-app.use("/api/org", Routes);
+app.use("/api/org", OrgRoutes);
 
 module.exports = app;

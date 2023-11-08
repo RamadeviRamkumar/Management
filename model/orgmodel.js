@@ -27,8 +27,10 @@ const OrgSchema = new mongoose.Schema({
     },
 });
 
-const OrgDetails = mongoose.model("OrgDetails",OrgSchema)
-
-module.exports = OrgDetails;
+var Organization = (module.exports = mongoose.model("OrgDetails", OrgSchema));
+module.exports.get = function (callback, limit) {
+  Organization.find(callback).limit(limit);
+};
+// module.exports = OrgDetails;
   
     

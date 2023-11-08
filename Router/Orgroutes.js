@@ -36,14 +36,14 @@ const Organization = require("../model/orgmodel.js");
     }
   });
 
-  var orgcontroller = require("../controller/orgcontroller.js");
-router.route("/org/getall").get(orgcontroller.index);
-router.route("org/:user_id").get(orgcontroller.view);
-router.route("/org/:_id").put(orgcontroller.update);
-router.route("/org/delete/:_id").delete(orgcontroller.Delete);
+  // var orgcontroller = require("../controller/orgcontroller.js");
+// router.route("/org/getall").get(orgcontroller.index);
+// router.route("org/:user_id").get(orgcontroller.view);
+// router.route("/org/:_id").put(orgcontroller.update);
+// router.route("/org/delete/:_id").delete(orgcontroller.Delete);
 
-router.route("/getByEmail/:email").get(orgcontroller.see);
-router.route("/getByEmail/:Empemail").patch(orgcontroller.update);
+// router.route("/getByEmail/:email").get(orgcontroller.see);
+// router.route("/getByEmail/:Empemail").patch(orgcontroller.update);
 
 
 module.exports = router;

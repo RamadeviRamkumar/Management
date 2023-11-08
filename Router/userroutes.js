@@ -212,10 +212,9 @@ const Org = await Organization.findOne({ OrgName });
         message: "Organization not found. Staff registration denied.",
       });
     }
-    var enc = cryptr.encrypt(Password);
-    var dec = cryptr.decrypt(enc);
-const user = new Signup({
-      password: enc,
+    var encryptedPassword = cryptr.encrypt(Password);
+  const user = new Signup({
+      password: encryptedPassword,
       Name,
       UserName,
       Empid,

@@ -20,8 +20,8 @@ router.post("/login", async (req, res) => {
   try {
     const { UserName, OrgName, Password } = req.body;
     
-const Organization = await Signup.findOne({ OrgName });
-      if (!Organization) {
+const Org = await Organization.findOne({ OrgName });
+      if (!Org) {
       return res.status(404).json({
         message: "Organization not found. Staff sign-in denied.",
       });
@@ -31,11 +31,11 @@ const Organization = await Signup.findOne({ OrgName });
 
     if (!user) {
       return res.status(404).json({
-        message: "User not found",
+        message: "User not found"
       });
     }
 
-    const decryptedPassword = cryptr.decrypt(users.Password);
+    const decryptedPassword = cryptr.decrypt(user.Password);
 
     if (decryptedPassword === Password) {
       return res.json({
@@ -177,8 +177,8 @@ router.post("/resetpassword", async (req, res) => {
 const Signup = require("../model/usermodel.js");
 const Organization = require("../model/orgmodel.js")
 router.post("/register", async (req, res) => {
-  var cryptr = new Cryptr("Employee");
- var user = new Signup();
+  
+var user = new Signup();
   try{
     const{
       Name,
@@ -203,28 +203,19 @@ router.post("/register", async (req, res) => {
       City,
       State,
       Pincode,
+      Usertype,
     } = req.body;
   
-
-   
-const Orga = await Organization.findOne({ OrgName });
-      if (!Orga) {
+const Org = await Organization.findOne({ OrgName });
+      if (!Org) {
       return res.status(404).json({
         message: "Organization not found. Staff registration denied.",
       });
     }
-    // if (
-    //   typeof ContactNo !== String ||
-    //   ContactNo.length !== 10 ||
-    //   isNaN(Number(ContactNo))
-    // ) {
-    //   return res.status(400).json({
-    //     message: "Contact should be a 10-digit number",
-    //   });
-    // }
-    const encryptedPassword = cryptr.encrypt(Password);
-    const user = new Signup({
-      password: encryptedPassword,
+    var enc = cryptr.encrypt(Password);
+    var dec = cryptr.decrypt(enc);
+const user = new Signup({
+      password: enc,
       Name,
       UserName,
       Empid,
@@ -246,6 +237,8 @@ const Orga = await Organization.findOne({ OrgName });
       City,
       State,
       Pincode,
+      Usertype,
+      Password,
     });
 
     await user.save();

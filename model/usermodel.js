@@ -90,7 +90,7 @@ const Schema = mongoose.Schema({
     Usertype : {
         type : String,
         enum :["Admin","Employee"],
-        default : "Employee",
+        default : "Admin",
         required : true,
       },
       Otp: {

@@ -25,7 +25,7 @@ const EmployeeSchema = new mongoose.Schema({
         type: String,
       },
       Dateofjoining: {
-        type: Date,
+        type: String,
       },
     Email: {
         type: String,
@@ -43,18 +43,18 @@ const EmployeeSchema = new mongoose.Schema({
         required: false,
         type: String
     },
-    Pincode: {
-        required: true,
-        type: Number
-    },
-    City: {
-        required: true,
-        type: String
-    },
-    State: {
-        required: true,
-        type: String
-    },
+    // Pincode: {
+    //     required: true,
+    //     type: Number
+    // },
+    // City: {
+    //     required: true,
+    //     type: String
+    // },
+    // State: {
+    //     required: true,
+    //     type: String
+    // },
     BankName: {
         required: true,
         type: String

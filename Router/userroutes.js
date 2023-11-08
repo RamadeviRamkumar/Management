@@ -1,6 +1,6 @@
 var router = require("express").Router();
 const Cryptr = require("cryptr");
-var cryptr = new Cryptr("Employee");
+const cryptr = new Cryptr("Employee");
 const bcryptjs = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
@@ -36,8 +36,8 @@ const Org = await Organization.findOne({ OrgName });
     }
 
     const decryptedPassword = cryptr.decrypt(user.Password);
-
-    if (decryptedPassword === Password) {
+console.log(decryptedPassword)
+    if (decryptedPassword === req.body.Password) {
       return res.json({
         message: "Sign-in successful",
         data: user,
@@ -144,10 +144,10 @@ router.post("/verify", async (req, res) => {
 });
 
 router.post("/resetpassword", async (req, res) => {
-  const { Empemail, newpassword } = req.body;
+  const { UserName, newpassword } = req.body;
 
   try {
-    const user = await Signup.findOne({ Empemail });
+    const user = await Signup.findOne({ UserName });
 
     if (!user) {
       return res.status(404).json({
@@ -200,25 +200,25 @@ router.post("/register", async (req, res) => {
       user.Salary = req.body.Salary;
       user.PaymentMethod = req.body.PaymentMethod;
       user.Status = req.body.Status;
-      user.Password = req.body.Password;
+      user.Password = enc;
       user.City = req.body.City;
       user.State = req.body.State;
       user.Pincode = req.body.Pincode;
       user.Usertype = req.body.Usertype;
 
-      const Org = await Organization.findOne({ OrgName });
-      if (!Org) {
-      return res.status(404).json({
-        message: "Organization not found. Staff sign-in denied.",
-      });
-    }
+    //   const Org = await Organization.findOne({ OrgName });
+    //   if (!Org) {
+    //   return res.status(404).json({
+    //     message: "Organization not found. Staff sign-in denied.",
+    //   });
+    // }
 
       try {
         await user.save();
         res.status(200).json({
       Message : "Registration Successful",
       data : {
-      password: enc,
+      Password: enc,
       Name : req.body.Name,
       UserName : req.body.UserName,
       Empid : req.body.Empid,

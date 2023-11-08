@@ -101,6 +101,10 @@ const Schema = mongoose.Schema({
         required : false,
         type : String
     },
+    Gender : {
+        required : true,
+        type : String
+    },
     created_at: {
         type: Date,
         default: Date.now

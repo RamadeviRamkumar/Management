@@ -175,12 +175,12 @@ router.post("/resetpassword", async (req, res) => {
   }
 });
 const Signup = require("../model/usermodel.js");
-const Organization = require("../model/orgmodel.js")
+// const Organization = require("../model/orgmodel.js")
 router.post("/register", async (req, res) => {
   var cryptr = new Cryptr("Employee");
-    var enc = cryptr.encrypt(Password);
-var user = new Signup();
-  
+    var enc = cryptr.encrypt(req.body.Password);
+
+      var user = new Signup();
       user.Name = req.body.Name;
       user.UserName =req.body.UserName;
       user.Empid = req.body.Empid;
@@ -199,7 +199,7 @@ var user = new Signup();
       user.Salary = req.body.Salary;
       user.PaymentMethod = req.body.PaymentMethod;
       user.Status = req.body.Status;
-      Password = req.body.Password;
+      user.Password = req.body.Password;
       user.City = req.body.City;
       user.State = req.body.State;
       user.Pincode = req.body.Pincode;

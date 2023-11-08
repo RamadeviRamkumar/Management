@@ -237,7 +237,6 @@ const Org = await Organization.findOne({ OrgName });
       State,
       Pincode,
       Usertype,
-      Password,
     });
 
     await user.save();
@@ -245,8 +244,10 @@ const Org = await Organization.findOne({ OrgName });
     return res.json({
       message: "Registered successfully",
       data: user,
+      // password : encryptedPassword
     });
   } catch (error) {
+    console.log(error)
     return res.status(500).json({
       message: "An error occurred",
       error: error.message,

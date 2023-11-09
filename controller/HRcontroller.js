@@ -1,4 +1,4 @@
-Service = require('../service/userservice.js');
+Service = require('../service/HRservice.js');
 
 exports.index = function(err,user)
 {

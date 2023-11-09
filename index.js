@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
 
-const apiRoutes = require("./Router/userroutes.js");
+const apiRoutes = require("./Router/HR.js");
 const OrgRoutes = require("./Router/Orgroutes.js");
 const mongodb = require("./mongo/DB.js");
 
@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to the signin page');
 });
 
-app.use('/api/user', apiRoutes);
+app.use('/api', apiRoutes);
 app.use("/api/org", OrgRoutes);
 
 module.exports = app;

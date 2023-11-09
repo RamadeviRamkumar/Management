@@ -1,5 +1,5 @@
 const Cryptr = require("cryptr");
-const Signup = require("../model/usermodel.js");
+const Signup = require("../model/HR model.js");
 
 exports.Dao_index = async function (req, res) {
   try {

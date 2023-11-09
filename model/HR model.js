@@ -89,8 +89,8 @@ const Schema = mongoose.Schema({
     },
     Usertype : {
         type : String,
-        enum :["Admin","Employee"],
-        default : "Admin",
+        enum :["Admin","HR","Employee"],
+        default : "HR",
         required : true,
       },
       Otp: {
@@ -105,32 +105,13 @@ const Schema = mongoose.Schema({
         required : true,
         type : String
     },
-    attendance:[{
-
-        date:{
-             type:Date,
-             default:Date.now,
-         },
-         entry:{type:Date},
-         exit:{
-             time:{
-                 type:Date
-             },
-             
-             reason:Number
-         }
- 
-    }]
- }, {
-   usePushEach: true,
- 
- created_at: {
+   created_at: {
         type: Date,
         default: Date.now
     }
 });
 
-var Signup = (module.exports = mongoose.model("Employees", Schema));
+var Signup = (module.exports = mongoose.model("HR", Schema));
 module.exports.get = function (callback, limit) {
   Signup.find(callback).limit(limit);
 };

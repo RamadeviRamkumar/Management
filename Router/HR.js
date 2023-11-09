@@ -176,7 +176,7 @@ router.post("/resetpassword", async (req, res) => {
     });
   }
 });
-const Signup = require("../model/usermodel.js");
+const Signup = require("../model/HR model.js");
 const Organization = require("../model/orgmodel.js")
 router.post("/register", async (req, res) => {
   var cryptr = new Cryptr("Employee");
@@ -206,13 +206,6 @@ router.post("/register", async (req, res) => {
       user.State = req.body.State;
       user.Pincode = req.body.Pincode;
       user.Usertype = req.body.Usertype;
-
-    //   const Org = await Organization.findOne({ OrgName });
-    //   if (!Org) {
-    //   return res.status(404).json({
-    //     message: "Organization not found. Staff sign-in denied.",
-    //   });
-    // }
 
       try {
         await user.save();
@@ -253,76 +246,15 @@ router.post("/register", async (req, res) => {
   }
 });     
 
-router.get("/:id", async (req, res) => {
-  try {
-    const user = await Signup.findById(req.params.id);
-    let hours = 0;
-    if(user.attendance.length > 0 ){
-      user.attendance.reverse();
-      user.attendance.map(a =>{
-        if(a.entry && a.exit.time){
-          hours = hours + calculateHours(a.entry.getTime(),a.exit.time.getTime());
-        }
-       
-      })
-      hours = parseFloat(hours /(3600*1000)).toFixed(4); 
-    }
-    
-    res.render("user", { user,hours});
-  } catch (error) {
-    console.log(error);
-    res.status('error','Cannot find user');
-    res.redirect('back')
-  }
-});
 
-//checkin
-router.post ('/CheckIn/:id',async (req,res) =>{
-  try {
-    const data = {
-      entry: Date.now()
-    };
-    const user = await Signup.findById(req.params.id);
+var HRcontroller = require("../controller/HRcontroller.js");
+router.route("/employee/getall").get(HRcontroller.index);
+router.route("/employee/:user_id").get(HRcontroller.view);
+router.route("/update/:_id").put(HRcontroller.update);
+router.route("/delete/:_id").delete(HRcontroller.Delete);
 
-    //if the user has an attendance array;
-   
-    if(user.attendance && user.attendance.length > 0){
-    //for a new checkin attendance, the last checkin
-    //must be at least 24hrs less than the new checkin time;
-        const lastCheckIn = user.attendance[user.attendance.length - 1];
-        const lastCheckInTimestamp = lastCheckIn.date.getTime();
-        // console.log(Date.now(), lastCheckInTimestamp);
-        if (Date.now() > lastCheckInTimestamp + 100) {
-          user.attendance.push(data);
-          await user.save();
-          req.flash('success','You have been signed in for today');
-          res.redirect('back')
-          
-        } else {
-          req.flash("error", "You have signed in today already");
-          res.redirect("back");
-        }
-    }else{
-        user.attendance.push(data);
-        await user.save();
-        req.flash('success','You have been signed in for today');
-        res.redirect('back')
-    }
-  
-  } catch (error) {
-    console.log("something went wrong");
-    console.log(error);
-  }
-});
-
-var usercontroller = require("../controller/usercontroller.js");
-router.route("/employee/getall").get(usercontroller.index);
-router.route("/employee/:user_id").get(usercontroller.view);
-router.route("/update/:_id").put(usercontroller.update);
-router.route("/delete/:_id").delete(usercontroller.Delete);
-
-router.route("/getByEmail/:email").get(usercontroller.see);
-router.route("/getByEmail/:Empemail").patch(usercontroller.update);
+router.route("/getByEmail/:email").get(HRcontroller.see);
+router.route("/getByEmail/:Empemail").patch(HRcontroller.update);
 // router.route('/getByEmail/:Empemail').put(controller.upgrade)
 // router.route('/getByEmail/:email').delete(controller.Delete)
 

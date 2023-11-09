@@ -316,7 +316,7 @@ router.post ('/CheckIn/:id',async (req,res) =>{
 });
 
 var usercontroller = require("../controller/usercontroller.js");
-router.route("/getall").get(usercontroller.index);
+router.route("/employee/getall").get(usercontroller.index);
 router.route("/employee/:user_id").get(usercontroller.view);
 router.route("/update/:_id").put(usercontroller.update);
 router.route("/delete/:_id").delete(usercontroller.Delete);

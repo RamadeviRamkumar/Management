@@ -122,14 +122,14 @@ router.post("/forgotpassword", async (req, res) => {
 });
 
 router.post("/verify", async (req, res) => {
-  const { Empemail, Otp } = req.body;
+  const { Email, Otp } = req.body;
 
-  if (!Empemail || !Otp) {
+  if (!Email || !Otp) {
     return res.status(400).json({ error: "Email and OTP are required" });
   }
 
   try {
-    const user = await Signup.findOne({ Empemail });
+    const user = await Signup.findOne({ Email });
 
     if (user && user.Otp === Otp) {
       user.Otp = null;
@@ -252,6 +252,30 @@ router.post("/register", async (req, res) => {
     });
   }
 });     
+
+router.get("/:id", async (req, res) => {
+  try {
+    const user = await Signup.findById(req.params.id);
+    let hours = 0;
+    if(user.attendance.length > 0 ){
+      user.attendance.reverse();
+      user.attendance.map(a =>{
+        if(a.entry && a.exit.time){
+          hours = hours + calculateHours(a.entry.getTime(),a.exit.time.getTime());
+        }
+       
+      })
+      hours = parseFloat(hours /(3600*1000)).toFixed(4); 
+    }
+    
+    res.render("user", { user,hours});
+  } catch (error) {
+    console.log(error);
+    res.status('error','Cannot find user');
+    res.redirect('back')
+  }
+});
+
 //checkin
 router.post ('/CheckIn/:id',async (req,res) =>{
   try {

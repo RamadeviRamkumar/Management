@@ -94,9 +94,9 @@ async function sendOTP(email, Otp) {
 }
 router.post("/forgotpassword", async (req, res) => {
   try {
-    const { Empemail } = req.body;
+    const { Email } = req.body;
 
-    const user = await Signup.findOne({ Empemail });
+    const user = await Signup.findOne({ Email });
 
     if (!user) {
       return res.status(404).json({
@@ -105,13 +105,13 @@ router.post("/forgotpassword", async (req, res) => {
     } else {
       const Otp = generateOTP();
       const user = await Signup.findOneAndUpdate(
-        { Empemail },
+        { Email },
         { $set: { Otp } },
         { new: true }
       );
       user.Otp = Otp;
       await user.save();
-      await sendOTP(Empemail, Otp);
+      await sendOTP(Email, Otp);
       res.status(200).json({ message: "OTP sent successfully" });
     }
   } catch (err) {
@@ -250,7 +250,46 @@ router.post("/register", async (req, res) => {
       error: error.message,
     });
   }
-});      
+});     
+//checkin
+router.post ('/CheckIn/:id',async (req,res) =>{
+  try {
+    const data = {
+      entry: Date.now()
+    };
+    const user = await Signup.findById(req.params.id);
+
+    //if the user has an attendance array;
+   
+    if(user.attendance && user.attendance.length > 0){
+    //for a new checkin attendance, the last checkin
+    //must be at least 24hrs less than the new checkin time;
+        const lastCheckIn = user.attendance[user.attendance.length - 1];
+        const lastCheckInTimestamp = lastCheckIn.date.getTime();
+        // console.log(Date.now(), lastCheckInTimestamp);
+        if (Date.now() > lastCheckInTimestamp + 100) {
+          user.attendance.push(data);
+          await user.save();
+          req.flash('success','You have been signed in for today');
+          res.redirect('back')
+          
+        } else {
+          req.flash("error", "You have signed in today already");
+          res.redirect("back");
+        }
+    }else{
+        user.attendance.push(data);
+        await user.save();
+        req.flash('success','You have been signed in for today');
+        res.redirect('back')
+    }
+  
+  } catch (error) {
+    console.log("something went wrong");
+    console.log(error);
+  }
+});
+
 var usercontroller = require("../controller/usercontroller.js");
 router.route("/getall").get(usercontroller.index);
 router.route("/employee/:user_id").get(usercontroller.view);

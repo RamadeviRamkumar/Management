@@ -105,7 +105,26 @@ const Schema = mongoose.Schema({
         required : true,
         type : String
     },
-    created_at: {
+    attendance:[{
+
+        date:{
+             type:Date,
+             default:Date.now,
+         },
+         entry:{type:Date},
+         exit:{
+             time:{
+                 type:Date
+             },
+             
+             reason:Number
+         }
+ 
+    }]
+ }, {
+   usePushEach: true,
+ 
+ created_at: {
         type: Date,
         default: Date.now
     }

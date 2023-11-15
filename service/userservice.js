@@ -1,4 +1,4 @@
-Dao = require('../Dao/HRDao.js');
+Dao = require('../Dao/userdao.js');
 
 exports.Service_index = function(err,callback)
 {

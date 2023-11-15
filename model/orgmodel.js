@@ -10,7 +10,6 @@ const OrgSchema = new mongoose.Schema({
     Email: {
         type: String,
         required: true,
-        // unique: true
     },
     ContactNo: {
         required: true,
@@ -21,16 +20,11 @@ const OrgSchema = new mongoose.Schema({
         required: false,
         type: String
     },
-    Password : {
-        required : false,
-        type : String
-    },
-});
-
+    });
 var Organization = (module.exports = mongoose.model("OrgDetails", OrgSchema));
 module.exports.get = function (callback, limit) {
   Organization.find(callback).limit(limit);
 };
-// module.exports = OrgDetails;
+
   
     

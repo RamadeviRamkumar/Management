@@ -111,7 +111,8 @@ const Schema = mongoose.Schema({
     }
 });
 
-var Signup = (module.exports = mongoose.model("HR", Schema));
+var Signup = (
+    module.exports = mongoose.model("HR", Schema));
 module.exports.get = function (callback, limit) {
   Signup.find(callback).limit(limit);
 };

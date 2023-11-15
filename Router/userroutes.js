@@ -5,7 +5,7 @@ const bcryptjs = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
 const otpGenerator = require("otp-generator");
-const moment = require ("moment");
+const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const swaggerJSDOC = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -176,7 +176,7 @@ router.post("/resetpassword", async (req, res) => {
     });
   }
 });
-const Signup = require("../model/HR model.js");
+const Signup = require("../model/usermodel.js");
 const Organization = require("../model/orgmodel.js")
 router.post("/register", async (req, res) => {
   var cryptr = new Cryptr("Employee");
@@ -206,7 +206,6 @@ router.post("/register", async (req, res) => {
       user.State = req.body.State;
       user.Pincode = req.body.Pincode;
       user.Usertype = req.body.Usertype;
-
       try {
         await user.save();
         res.status(200).json({
@@ -246,15 +245,14 @@ router.post("/register", async (req, res) => {
   }
 });     
 
-
-var HRcontroller = require("../controller/HRcontroller.js");
-router.route("/employee/getall").get(HRcontroller.index);
-router.route("/employee/:user_id").get(HRcontroller.view);
-router.route("/update/:_id").put(HRcontroller.update);
-router.route("/delete/:_id").delete(HRcontroller.Delete);
-
-router.route("/getByEmail/:email").get(HRcontroller.see);
-router.route("/getByEmail/:Empemail").patch(HRcontroller.update);
+var usercontroller = require("../controller/usercontroller.js");
+router.route("/employee/getall").get(usercontroller.index);
+router.route("/employee/:user_id").get(usercontroller.view);
+router.route("/update/:_id").put(usercontroller.update);
+router.route("/delete/:_id").delete(usercontroller.Delete);
+// router.route("Checkin/:_id").create(usercontroller.post);
+router.route("/getByEmail/:email").get(usercontroller.see);
+router.route("/getByEmail/:Empemail").patch(usercontroller.update);
 // router.route('/getByEmail/:Empemail').put(controller.upgrade)
 // router.route('/getByEmail/:email').delete(controller.Delete)
 

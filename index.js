@@ -4,8 +4,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
 
-const apiRoutes = require("./Router/HR.js");
+const apiRoutes = require("./Router/userroutes.js");
 const OrgRoutes = require("./Router/Orgroutes.js");
+const attRoutes = require("./Router/attroutes.js");
 const mongodb = require("./mongo/DB.js");
 
 app.use(cors());
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', apiRoutes);
-app.use("/api/org", OrgRoutes);
+app.use("/org", OrgRoutes);
+app.use("/admin",attRoutes);
 
 module.exports = app;

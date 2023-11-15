@@ -1,5 +1,5 @@
 const Cryptr = require("cryptr");
-const Signup = require("../model/HR model.js");
+const Signup = require("../model/usermodel.js");
 
 exports.Dao_index = async function (req, res) {
   try {
@@ -83,7 +83,7 @@ exports.Dao_update = async (req, res) => {
     } else {
       res.status(404).json({
         error: "User Not Found",
-      });
+      });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
     }
   } catch (error) {
     res.status(500).json({

@@ -1,32 +1,31 @@
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-// const Schema = new mongoose.Schema({
+const Schema = new mongoose.Schema({
+ 
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+      entry: {
+        type: Date,
+      },
+      userName: {
+        type : String
+      },
+      exit: {
+        time: {
+          type: Date,
+        },
+        reason: Number,
+      },
+  
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-// attendance: [
-//     {
-//       workingHours: {
-//         type: Number,
-//         default: 0,
-//       },
-//       date: {
-//         type: Date,
-//         default: Date.now,
-//       },
-//       entry: { type: Date },
-//       exit: {
-//         time: { type: Date },
-//         reason: {
-//           type: Number,
-//           min: 1,
-//           max: 2,
-//         },
-//       },
-//     },
-// ],
-// });
-
-// var attendance = (
-//     module.exports = mongoose.model("admin", Schema));
-// module.exports.get = function (callback, limit) {
-//   attendance.find(callback).limit(limit);
-// };
+var Signup = (module.exports = mongoose.model("entry", Schema));
+module.exports.get = function (callback, limit) {
+  Signup.find(callback).limit(limit);
+};

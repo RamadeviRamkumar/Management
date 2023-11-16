@@ -79,15 +79,7 @@ const Schema = mongoose.Schema({
         required:false,
         type : String
     },
-    PaymentMethod : {
-        required : true,
-        type : String
-    },
-    Status : {
-        required : true,
-        type : String
-    },
-    Usertype : {
+      Usertype : {
         type : String,
         enum :["Admin","HR","Employee"],
         default : "HR",
@@ -105,33 +97,14 @@ const Schema = mongoose.Schema({
         required : true,
         type : String
     },
-    attendance: [{
-        date: {
-            type: Date,
-            default: Date.now,
-        },
-        entry: {
-            type: Date
-        },
-        exit: {
-            time: {
-                type: Date
-            },
-            reason: Number
-        }
-    }],
-
-    // ... (rest of your fields)
-
+    
     created_at: {
         type: Date,
         default: Date.now
-    }
-}, {
-    usePushEach: true
+    },
 });
 
-var Signup = (module.exports = mongoose.model("HR", Schema));
+var Signup = (module.exports = mongoose.model("Users", Schema));
 module.exports.get = function (callback, limit) {
   Signup.find(callback).limit(limit);
 };

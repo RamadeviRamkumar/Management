@@ -5,7 +5,6 @@ const bcryptjs = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
 const otpGenerator = require("otp-generator");
-const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const swaggerJSDOC = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
@@ -177,7 +176,6 @@ router.post("/resetpassword", async (req, res) => {
   }
 });
 const Signup = require("../model/usermodel.js");
-const Organization = require("../model/orgmodel.js")
 router.post("/register", async (req, res) => {
   var cryptr = new Cryptr("Employee");
     var enc = cryptr.encrypt(req.body.Password);
@@ -191,7 +189,7 @@ router.post("/register", async (req, res) => {
       user.DateOfJoining = req.body.Dateofjoining;
       user.ContactNo = req.body.ContactNo;
       user.Email = req.body.Email;
-      user.Address = req.body.Address
+      user.Address = req.body.Address;
       user.Designation = req.body.Designation;
       user.OrgName = req.body.OrgName;
       user.BankName =req.body.BankName;
@@ -199,12 +197,13 @@ router.post("/register", async (req, res) => {
       user.Ifsc = req.body.Ifsc;
       user.AccountNo = req.body.AccountNo;
       user.Salary = req.body.Salary;
-      user.PaymentMethod = req.body.PaymentMethod;
+      // user.MaritalStatus = req.body.MaritalStatus;
       user.Status = req.body.Status;
       user.Password = enc;
       user.City = req.body.City;
       user.State = req.body.State;
       user.Pincode = req.body.Pincode;
+      // user.BloodGroup = req.body.BloodGroup;
       user.Usertype = req.body.Usertype;
       try {
         await user.save();
@@ -212,28 +211,29 @@ router.post("/register", async (req, res) => {
       Message : "Registration Successful",
       data : {
       Password: enc,
-      Name : req.body.Name,
-      UserName : req.body.UserName,
-      Empid : req.body.Empid,
-      Gender : req.body.Gender,
-      DateOfBirth : req.body.DateOfBirth,
+      
+      UserName      : req.body.UserName,
+      Name          : req.body.Name,
+      Empid         : req.body.Empid,
+      Gender        : req.body.Gender,
+      DateOfBirth   : req.body.DateOfBirth,
+      // MaritalStatus : req.body.MaritalStatus,
       DateOfJoining : req.body.DateOfJoining,
-      ContactNo : req.body.ContactNo,
-      Email : req.body.Email,
-      Address : req.body.Address,
-      Designation : req.body.Designation,
-      OrgName : req.body.OrgName,
-      BankName : req.body.BankName,
-      Branch : req.body.Branch,
-      Ifsc : req.body.Ifsc,
-      AccountNo : req.body.AccountNo,
-      Salary : req.body.Salary,
-      PaymentMethod : req.body.PaymentMethod,
-      Status : req.body.Status,
-      City : req.body.City,
-      State : req.body.State,
-      Pincode : req.body.Pincode,
-      Usertype : req.body.Usertype,
+      ContactNo     : req.body.ContactNo,
+      Email         : req.body.Email,
+      Designation   : req.body.Designation,
+      Address       : req.body.Address,
+      City          : req.body.City,
+      State         : req.body.State,
+      Pincode       : req.body.Pincode,
+      // BloodGroup    : req.body.BloodGroup,
+      OrgName       : req.body.OrgName,
+      BankName      : req.body.BankName,
+      Branch        : req.body.Branch,
+      Ifsc          : req.body.Ifsc,
+      AccountNo     : req.body.AccountNo,
+      Salary        : req.body.Salary,
+      Usertype      : req.body.Usertype,
         },
     });
 } catch (error) {
@@ -245,49 +245,58 @@ router.post("/register", async (req, res) => {
   }
 });     
 //checkin
-router.post("/user/:id/enter", async (req, res) => {
-  try {
-    const data = {
-      entry: Date.now(),
-    };
-    const user = await Signup.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({
-        message: "User not found",
-      });
-    }
-  if (user.attendance && user.attendance.length > 0) {
-      const lastCheckIn = user.attendance[user.attendance.length - 1];
-      const lastCheckInTimestamp = lastCheckIn.entry;
+// router.post("/user/:id/enter", async (req, res) => {
+//   try {
+//     const currentDate = new Date(); // Gets the current date and time in the local time zone
+//     console.log(currentDate.toLocaleString());
+//     const data = {
+//      // Logs the date and time in a human-readable format based on the local time zone
 
-      if (Date.now() > lastCheckInTimestamp + 24 * 60 * 60 * 1000) {
-        user.attendance.push(data);
-        await user.save();
-        return res.status(200).json({
-          message: "Check-in successful",
-          data: user.attendance,
-        });
-      } else {
-        return res.status(400).json({
-          message: "You have already checked in today",
-        });
-      }
-    } else {
-      user.attendance.push(data);
-      await user.save();
-      return res.status(200).json({
-        message: "First check-in for the user",
-        data: user.attendance,
-      });
-    }
-  } catch (error) {
-    console.error("An error occurred:", error);
-    return res.status(500).json({
-      message: "An error occurred",
-      error: error.message,
-    });
-  }
-});
+//       entry: currentDate,
+//     };
+//     const user = await Signup.findById(req.params.id);
+//     if (!user) {
+//       return res.status(404).json({
+//         message: "User not found",
+//       });
+//     }
+//   if (user.attendance && user.attendance.length > 0) {
+//       const lastCheckIn = user.attendance[user.attendance.length - 1];
+//       const lastCheckInTimestamp = lastCheckIn.entry;
+
+//       if (Date.now() > lastCheckInTimestamp + 24 * 60 * 60 * 1000) {
+//         user.attendance.push(data);
+//         await user.save();
+//         return res.status(200).json({
+//           message: "Check-in successful",
+//           data: user.attendance,
+//         });
+//       } else {
+//         return res.status(400).json({
+//           message: "You have already checked in today",
+//         });
+//       }
+//     } else {
+//       user.attendance.push(data);
+//       await user.save();
+//       return res.status(200).json({
+//         message: "First check-in for the user",
+//         data: user.attendance,
+//       });
+//     }
+//   } catch (error) {
+//     console.error("An error occurred:", error);
+//     return res.status(500).json({
+//       message: "An error occurred",
+//       error: error.message,
+//     });
+//   }
+// });
+
+
+
+
+
 //checkout
 // router.get("/user/:id/exit", async (req, res) => {
 //   try {
@@ -331,7 +340,7 @@ router.route("/employee/getall").get(usercontroller.index);
 router.route("/employee/:user_id").get(usercontroller.view);
 router.route("/update/:_id").put(usercontroller.update);
 router.route("/delete/:_id").delete(usercontroller.Delete);
-// router.route("Checkin/:_id").create(usercontroller.post);
+
 router.route("/getByEmail/:email").get(usercontroller.see);
 router.route("/getByEmail/:Empemail").patch(usercontroller.update);
 // router.route('/getByEmail/:Empemail').put(controller.upgrade)

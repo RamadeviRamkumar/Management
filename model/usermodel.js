@@ -105,14 +105,33 @@ const Schema = mongoose.Schema({
         required : true,
         type : String
     },
-   created_at: {
+    attendance: [{
+        date: {
+            type: Date,
+            default: Date.now,
+        },
+        entry: {
+            type: Date
+        },
+        exit: {
+            time: {
+                type: Date
+            },
+            reason: Number
+        }
+    }],
+
+    // ... (rest of your fields)
+
+    created_at: {
         type: Date,
         default: Date.now
     }
+}, {
+    usePushEach: true
 });
 
-var Signup = (
-    module.exports = mongoose.model("HR", Schema));
+var Signup = (module.exports = mongoose.model("HR", Schema));
 module.exports.get = function (callback, limit) {
   Signup.find(callback).limit(limit);
 };

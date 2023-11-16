@@ -244,6 +244,87 @@ router.post("/register", async (req, res) => {
     });
   }
 });     
+//checkin
+router.post("/user/:id/enter", async (req, res) => {
+  try {
+    const data = {
+      entry: Date.now(),
+    };
+    const user = await Signup.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+  if (user.attendance && user.attendance.length > 0) {
+      const lastCheckIn = user.attendance[user.attendance.length - 1];
+      const lastCheckInTimestamp = lastCheckIn.entry;
+
+      if (Date.now() > lastCheckInTimestamp + 24 * 60 * 60 * 1000) {
+        user.attendance.push(data);
+        await user.save();
+        return res.status(200).json({
+          message: "Check-in successful",
+          data: user.attendance,
+        });
+      } else {
+        return res.status(400).json({
+          message: "You have already checked in today",
+        });
+      }
+    } else {
+      user.attendance.push(data);
+      await user.save();
+      return res.status(200).json({
+        message: "First check-in for the user",
+        data: user.attendance,
+      });
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return res.status(500).json({
+      message: "An error occurred",
+      error: error.message,
+    });
+  }
+});
+//checkout
+// router.get("/user/:id/exit", async (req, res) => {
+//   try {
+//     const user = await Signup.findOne({_id:req.params.id});
+//     res.render('checkout',{user});
+//   } catch (error) {
+//     console.log('Cannot find User');
+//   }
+ 
+// });
+
+// router.post("/user/:id/exit", async (req, res) => {
+   
+//   try {
+//     const user = await Signup.findOne({_id:req.params.id});
+//     if(user.attendance && user.attendance.length > 0){ 
+
+//           const lastAttendance = user.attendance[user.attendance.length - 1];
+//           if(lastAttendance.exit.time){
+//             req.flash('error','You have already signed out today');
+//             res.redirect(`/user/${req.params.id}`);
+//             return;
+//           }
+//           lastAttendance.exit.time = Date.now();
+//           lastAttendance.exit.reason = req.body.reason;
+//           await user.save();
+//           req.flash('success','You have been successfully signed out')
+//           res.redirect(`/user/${req.params.id}`);
+
+//       }else{ 
+//         req.flash('error','You do not have an attendance entry ');
+//         res.redirect('back')
+//       }
+//   } catch (error) {
+//     console.log('Cannot find User');
+//   }
+// });
 
 var usercontroller = require("../controller/usercontroller.js");
 router.route("/employee/getall").get(usercontroller.index);

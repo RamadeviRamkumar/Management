@@ -97,6 +97,14 @@ const Schema = mongoose.Schema({
         required : true,
         type : String
     },
+    MaritalStatus : {
+        required : true,
+        type : String
+    },
+    BloodGroup : {
+        required : true,
+        type : String
+    },
     
     created_at: {
         type: Date,

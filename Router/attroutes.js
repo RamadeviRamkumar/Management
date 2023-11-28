@@ -1,94 +1,82 @@
-const router = require('express').Router();
+const express = require('express');
+const bodyParser = require('body-parser');
 const moment = require('moment');
 const Signup = require('../model/usermodel.js');
+const Signup = require('../model/model.js');
 
-router.post('/checkin/:id', async (req, res) => {
+router.post('/register', async (req, res) => {
   try {
-    const { id } = req.params;
-    const now = new Date();
-    const user = await Signup.findById(id);
+    const { UserName, Designation } = req.body;
 
-    if (!user) {
-      return res.status(404).json({ message: 'Employee not found' });
-    }
-
-    if (user.lastCheckin && now - user.lastCheckin < 24 * 60 * 60 * 1000) {
-      return res.status(400).json({ message: 'User already checked in within the last 24 hours' });
-    }
-
-    user.lastCheckin = now;
-    await user.save();
-    const Attendance = require("../model/attmodel.js");
-    const checkinDetails = new Attendance({
-      UserName: user.UserName,
-      checkinTime: now,
-    });
-
-    await checkinDetails.save();
-    return res.status(200).json({
-      message: 'Check-in successful',
-      data: { checkin: now, UserName: user.UserName },
-    });
+    const newEmployee = new Signup({ UserName, Designation, checkinStatus: false, date: new Date() });
+    await newEmployee.save();
+    res.status(201).json(newEmployee);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ error: error.message });
   }
 });
+app.use(bodyParser.json());
+const userCheckInStatus = {};
 
-router.post('/checkout/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const now = new Date();
-    const user = await Signup.findById(id);
-
-    if (!user) {
-      return res.status(404).json({ message: 'Employee not found' });
-    }
-
-    if (user.lastCheckout) {
-      return res.status(400).json({ message: 'User has already checked out' });
-    }
-
-    user.lastCheckout = now;
-    await user.save();
-
-    const workingHours = calculateWorkingHours(user.lastCheckin, now);
-    const formattedWorkingHours = `${workingHours.hours} hours and ${workingHours.minutes} minutes`;
-
-    console.log(`Working Hours: ${formattedWorkingHours}`);
-
-    return res.status(200).json({
-      message: 'Check-out successful',
-      data: {
-        checkout: now,
-        UserName: user.UserName,
-        workingHours: formattedWorkingHours,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+function formatHoursMinutesAndSeconds(duration) {
+    const hours = Math.floor(duration);
+    const minutes = Math.floor((duration % 1) * 60);
+    const seconds = Math.round((duration * 3600) % 60);
+  
+    const formattedDuration =
+      (hours > 0 ? hours + ' hour' + (hours > 1 ? 's' : '') : '') +
+      ((hours > 0 && minutes > 0) ? ' and ' : '') +
+      (minutes > 0 ? minutes + ' minute' + (minutes > 1 ? 's' : '') : '') +
+      ((hours > 0 || minutes > 0) && seconds > 0 ? ' and ' : '') +
+      (seconds > 0 ? seconds + ' second' + (seconds > 1 ? 's' : '') : '');
+  
+    return formattedDuration;
   }
+  
+router.post('/user/checkin', (req, res) => {
+  const { UserName } = req.body;
+
+  if (userCheckInStatus[UserName] && userCheckInStatus[UserName].checkInStatus) {
+    
+    return res.status(400).json({ error: 'User already checked in' });
+  }
+
+  userCheckInStatus[UserName] = {
+    checkIn: moment().toISOString(),
+    checkInStatus: true,
+  };
+
+  res.json({
+    UserName,
+    checkIn: userCheckInStatus[UserName].checkIn,
+    checkInStatus: true,
+  });
 });
 
-router.get('/att', async (req, res) => {
-  try {
-    const employees = await Signup.find();
-    return res.json(employees);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+
+router.post('/user/checkout', (req, res) => {
+  const { UserName } = req.body;
+
+  if (!userCheckInStatus[UserName] || !userCheckInStatus[UserName].checkInStatus) {
+    
+    return res.status(400).json({ error: 'User not checked in' });
   }
+
+  userCheckInStatus[UserName].checkOut = moment().toISOString();
+  userCheckInStatus[UserName].checkInStatus = false;
+
+  const workingHours = moment(userCheckInStatus[UserName].checkOut)
+    .diff(moment(userCheckInStatus[UserName].checkIn), 'hours', true);
+
+  const formattedWorkingHours = formatHoursMinutesAndSeconds(workingHours);
+
+  res.json({
+    UserName,
+    checkOut: userCheckInStatus[UserName].checkOut,
+    checkInStatus: false,
+    workingHours: formattedWorkingHours,
+  });
+ delete userCheckInStatus[UserName];
 });
 
-function calculateWorkingHours(checkin, checkout) {
-  const checkinTime = moment(checkin);
-  const checkoutTime = moment(checkout);
-  const diffInMinutes = checkoutTime.diff(checkinTime, 'minutes');
-  const hours = Math.floor(diffInMinutes / 60);
-  const minutes = diffInMinutes % 60;
 
-  return { hours, minutes };
-}
-
-module.exports = router;

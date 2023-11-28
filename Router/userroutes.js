@@ -5,7 +5,31 @@ const bcryptjs = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
 const otpGenerator = require("otp-generator");
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth2').Strategy; 
+const dotenv = require('dotenv'); 
+dotenv.config(); 
 
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+passport.use(new GoogleStrategy({
+  clientID: "117497127340-iqv7gn6bpaa0emu0op28g9bu058rff7d.apps.googleusercontent.com", // Use the variable directly
+  clientsecret : "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",
+
+  callbackURL: "http://localhost:7000/auth/google/callback",
+  passReqToCallback: true,
+},
+function(request, accessToken, refreshToken, profile, done) {
+  return done(null, profile);
+}));
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 router.get("/read", function (req, res) {
   res.json({
     Status: "API works",
@@ -181,7 +205,7 @@ var user   = new Signup();
       user.Empid         = req.body.Empid;
       user.Gender        = req.body.Gender;
       user.DateOfBirth   = req.body.Dateofbirth;
-      user.DateOfJoining = req.body.Dateofjoining;
+      user.DateOfJoining = req.body.DateofJoining;
       user.ContactNo     = req.body.ContactNo;
       user.Email         = req.body.Email;
       user.Address       = req.body.Address;
@@ -200,7 +224,30 @@ var user   = new Signup();
       user.Pincode       = req.body.Pincode;
       user.BloodGroup    = req.body.BloodGroup;
       user.Usertype      = req.body.Usertype;
-      try {
+
+    const currentDate = new Date();
+    const joiningDate = new Date(req.body.DateOfJoining);
+    const joiningMonth = joiningDate.getMonth() + 1; 
+    let userCasualleaves = 12 - (joiningMonth - 1);
+    let userMedicalleaves = 7 - (joiningMonth - 1);
+
+    console.log("Joining Month: ", joiningMonth);
+    console.log("User Casual Leave: ", userCasualleaves);
+    console.log("User Medical Leave: ", userMedicalleaves);
+    userCasualleaves = Math.max(userCasualleaves, 0);
+    userMedicalleaves = Math.max(userMedicalleaves, 0);
+    console.log("User Casual Leave (after max): ", userCasualleaves);
+    console.log("User Medical Leave (after max): ", userMedicalleaves);
+
+    let userMenstrualleaves = 0;
+
+if (req.body.Gender === "Female") {
+  userMenstrualleaves = 12 - (joiningMonth - 1);
+  userMenstrualleaves = Math.max(userMenstrualleaves, 0);
+}
+user.Menstrualleaves = userMenstrualleaves;
+
+try {
         await user.save();
         res.status(200).json({
       Message : "Registration Successful",
@@ -228,6 +275,9 @@ var user   = new Signup();
       AccountNo     : req.body.AccountNo,
       Salary        : req.body.Salary,
       Usertype      : req.body.Usertype,
+      Casualleaves: userCasualleaves,
+      Medicalleaves: userMedicalleaves,
+      Menstrualleaves: userMenstrualleaves,
         },
     });
 } catch (error) {
@@ -240,11 +290,14 @@ var user   = new Signup();
 });    
 var usercontroller = require("../controller/usercontroller.js");
 router.route("/employee/getall").get(usercontroller.index);
-router.route("/employee/:user_id").get(usercontroller.view);
-router.route("/update/:_id").put(usercontroller.update);
-router.route("/delete/:_id").delete(usercontroller.Delete);
+router.route("/balanceleaves/:UserName").get(usercontroller.see);
 
-router.route("/getByEmail/:email").get(usercontroller.see);
-router.route("/getByEmail/:Empemail").patch(usercontroller.update);
+router
+  .route("/employee/:UserName")
+  .get(usercontroller.view)
+  .patch(usercontroller.update)
+  .put(usercontroller.update)
+  .delete(usercontroller.Delete);
+
 
 module.exports = router;

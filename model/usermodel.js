@@ -25,7 +25,7 @@ const Schema = mongoose.Schema({
         type: String,
       },
       DateOfJoining: {
-        type: String,
+        type: Date,
       },
     Email: {
         type: String,
@@ -36,8 +36,7 @@ const Schema = mongoose.Schema({
     ContactNo: {
         required: true,
         type: Number,
-        unique: true,
-        length: 10
+        length: 10,
     },
     Address: {
         required: false,
@@ -82,7 +81,7 @@ const Schema = mongoose.Schema({
       Usertype : {
         type : String,
         enum :["Admin","HR","Employee"],
-        default : "HR",
+        default : "Employee",
         required : true,
       },
       Otp: {
@@ -105,7 +104,18 @@ const Schema = mongoose.Schema({
         required : true,
         type : String
     },
-    
+    Casualleaves: {
+        type: Number,
+        
+      },
+      Medicalleaves: {
+        type: Number,
+        
+      },
+      Menstrualleaves: {
+        type: Number,
+        required: true,
+      }, 
     created_at: {
         type: Date,
         default: Date.now

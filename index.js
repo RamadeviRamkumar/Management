@@ -5,25 +5,10 @@ const cors = require('cors');
 const moment = require("moment");
 const app = express();
 const session = require("express-session");
-const flash = require("connect-flash");
 
-app.use(
-  session({
-    secret: "123456789",
-    resave: false,
-    saveUninitialized: false
-  })
-);
-app.use(flash());
-app.use((req, res, next) => {
-  res.locals.error = req.flash("error");
-  res.locals.success = req.flash("success");
-  res.locals.moment = moment;
-  next();
-});
 const apiRoutes = require("./Router/userroutes.js");
 const OrgRoutes = require("./Router/Orgroutes.js");
-const attRoutes = require("./Router/attroutes.js");
+// const attRoutes = require("./Router/attroutes.js");
 
 const mongodb = require("./mongo/DB.js");
 
@@ -49,6 +34,6 @@ app.get('/', (req, res) => {
 
 app.use('/api', apiRoutes);
 app.use("/org", OrgRoutes);
-app.use("/att",attRoutes);
+// app.use("/att",attRoutes);
 
 module.exports = app;

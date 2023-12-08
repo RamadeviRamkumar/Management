@@ -5,44 +5,18 @@ const bcryptjs = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const randomstring = require("randomstring");
 const otpGenerator = require("otp-generator");
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth2').Strategy; 
-const dotenv = require('dotenv'); 
-dotenv.config(); 
+const jwt = require('jsonwebtoken');
+const jwtSecretKey = 'nwwYiy22KbnQjxJHkhKtufACwGKTvjZKLvpMh5QWz0o';
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-passport.use(new GoogleStrategy({
-  clientID: "117497127340-iqv7gn6bpaa0emu0op28g9bu058rff7d.apps.googleusercontent.com", // Use the variable directly
-  clientsecret : "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",
-
-  callbackURL: "http://localhost:7000/auth/google/callback",
-  passReqToCallback: true,
-},
-function(request, accessToken, refreshToken, profile, done) {
-  return done(null, profile);
-}));
-
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
-router.get("/read", function (req, res) {
-  res.json({
-    Status: "API works",
-    message: "Welcome to signin Page",
-  });
-});
+const invalidatedTokens = [];
 
 router.post("/login", async (req, res) => {
   try {
-    const { UserName, OrgName} = req.body;
-    
-const Org = await Organization.findOne({ OrgName });
-      if (!Org) {
+    const { UserName, OrgName } = req.body;
+
+    // Assume you have Organization and Signup models defined
+    const Org = await Organization.findOne({ OrgName });
+    if (!Org) {
       return res.status(404).json({
         message: "Organization not found. Staff sign-in denied.",
       });
@@ -52,16 +26,20 @@ const Org = await Organization.findOne({ OrgName });
 
     if (!user) {
       return res.status(404).json({
-        message: "User not found"
+        message: "User not found",
       });
     }
 
-const decryptedPassword = cryptr.decrypt(user.Password);
-// console.log(decryptedpassword)
-if (decryptedPassword === req.body.Password) {
-    return res.json({
+    const decryptedPassword = cryptr.decrypt(user.Password);
+
+    if (decryptedPassword === req.body.Password) {
+      // Generate JWT token
+      const token = jwt.sign({ userId: user._id, userName: user.UserName }, jwtSecretKey, { expiresIn: '1h' });
+
+      return res.json({
         message: "Sign-in successful",
         data: user,
+        token: token,
       });
     } else {
       return res.status(401).json({
@@ -76,6 +54,77 @@ if (decryptedPassword === req.body.Password) {
     });
   }
 });
+router.post("/logout", (req, res) => {
+  const { token } = req.body;
+  if (invalidatedTokens.includes(token)) {
+    return res.status(401).json({
+      message: "Invalid token",
+    });
+  }
+  invalidatedTokens.push(token);
+
+  return res.json({
+    message: "Logout successful",
+  });
+});
+
+// Protected route example
+router.get("/protected", (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  // Check if the token is in the list of invalidated tokens
+  if (invalidatedTokens.includes(token)) {
+    return res.status(401).json({
+      message: "Invalid token",
+    });
+  }
+
+  // Your protected route logic here
+
+  return res.json({
+    message: "Protected route accessed",
+  });
+});
+
+// router.post("/login", async (req, res) => {
+//   try {
+//     const { UserName, OrgName} = req.body;
+    
+// const Org = await Organization.findOne({ OrgName });
+//       if (!Org) {
+//       return res.status(404).json({
+//         message: "Organization not found. Staff sign-in denied.",
+//       });
+//     }
+
+//     const user = await Signup.findOne({ UserName });
+
+//     if (!user) {
+//       return res.status(404).json({
+//         message: "User not found"
+//       });
+//     }
+
+// const decryptedPassword = cryptr.decrypt(user.Password);
+// // console.log(decryptedpassword)
+// if (decryptedPassword === req.body.Password) {
+//     return res.json({
+//         message: "Sign-in successful",
+//         data: user,
+//       });
+//     } else {
+//       return res.status(401).json({
+//         message: "Incorrect password",
+//       });
+//     }
+//   } catch (error) {
+//     console.error("An error occurred:", error);
+//     return res.status(500).json({
+//       message: "An error occurred",
+//       error: error.message,
+//     });
+//   }
+// });
 
 const transporter = nodemailer.createTransport({
   service: "Gmail",
@@ -224,29 +273,6 @@ var user   = new Signup();
       user.Pincode       = req.body.Pincode;
       user.BloodGroup    = req.body.BloodGroup;
       user.Usertype      = req.body.Usertype;
-
-    const currentDate = new Date();
-    const joiningDate = new Date(req.body.DateOfJoining);
-    const joiningMonth = joiningDate.getMonth() + 1; 
-    let userCasualleaves = 12 - (joiningMonth - 1);
-    let userMedicalleaves = 7 - (joiningMonth - 1);
-
-    console.log("Joining Month: ", joiningMonth);
-    console.log("User Casual Leave: ", userCasualleaves);
-    console.log("User Medical Leave: ", userMedicalleaves);
-    userCasualleaves = Math.max(userCasualleaves, 0);
-    userMedicalleaves = Math.max(userMedicalleaves, 0);
-    console.log("User Casual Leave (after max): ", userCasualleaves);
-    console.log("User Medical Leave (after max): ", userMedicalleaves);
-
-    let userMenstrualleaves = 0;
-
-if (req.body.Gender === "Female") {
-  userMenstrualleaves = 12 - (joiningMonth - 1);
-  userMenstrualleaves = Math.max(userMenstrualleaves, 0);
-}
-user.Menstrualleaves = userMenstrualleaves;
-
 try {
         await user.save();
         res.status(200).json({
@@ -275,9 +301,6 @@ try {
       AccountNo     : req.body.AccountNo,
       Salary        : req.body.Salary,
       Usertype      : req.body.Usertype,
-      Casualleaves: userCasualleaves,
-      Medicalleaves: userMedicalleaves,
-      Menstrualleaves: userMenstrualleaves,
         },
     });
 } catch (error) {
@@ -287,10 +310,11 @@ try {
       error: error.message,
     });
   }
-});    
+});  
+
+
 var usercontroller = require("../controller/usercontroller.js");
 router.route("/employee/getall").get(usercontroller.index);
-router.route("/balanceleaves/:UserName").get(usercontroller.see);
 
 router
   .route("/employee/:UserName")
